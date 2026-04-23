@@ -1,0 +1,258 @@
+Vertices:
+1 0 1 0
+1 0 2 0
+1 1 0 0
+1 1 0 1
+1 2 0 0
+Lattice width: 1
+Facets: 
+0 0 0 1
+0 1 0 -1
+-1 1 1 0
+0 0 1 0
+2 -1 -1 -1
+Facet widths: 1 2 1 2 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 0 1 0
+1 0 2 0
+1 1 0 0
+1 1 0 1
+1 2 0 0
+Lattice width: 1
+Facets: 
+0 0 0 1
+0 1 0 -1
+-1 1 1 0
+0 0 1 0
+2 -1 -1 -1
+Facet widths: 1 2 1 2 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 0 0 0
+1 0 0 1
+1 0 1 0
+1 2 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+2 -1 -2 -2
+Facet widths: 2 1 1 2
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 0 0 0
+1 0 0 1
+1 0 1 0
+1 2 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+2 -1 -2 -2
+Facet widths: 2 1 1 2
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1
+
+Vertices:
+1 1 0 0
+1 0 1 0
+1 0 0 1
+1 0 0 0
+Lattice width: 1
+Facets: 
+0 1 0 0
+0 0 1 0
+0 0 0 1
+1 -1 -1 -1
+Facet widths: 1 1 1 1
+Facet width (minimal): 1
+Rays in Minkowski cone: 1

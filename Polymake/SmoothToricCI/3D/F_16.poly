@@ -1,0 +1,352 @@
+# F_16
+# List of 3d irreducible Minkowski summands
+
+
+use application "polytope";
+
+
+my $F_0 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_0 = new Polytope(POINTS=>$F_0);
+my $LW_0 = $P_0->LATTICE_WIDTH;
+my $FW_0 = $P_0->FACET_WIDTHS;
+my $FWmin_0 = minimum($FW_0);
+my $Facets_0 = $P_0->FACETS;
+my $M_0 = $P_0->MINKOWSKI_CONE;
+my $R_0 = $M_0->N_RAYS;
+print("Vertices:\n");
+print($F_0);
+print("Lattice width: ");
+print($LW_0);
+print("\nFacets: \n");
+print($Facets_0);
+print("Facet widths: ");
+print($FW_0);
+print("\nFacet width (minimal): ");
+print($FWmin_0);
+print("\nRays in Minkowski cone: ");
+print($R_0);
+print("\n");
+
+
+my $F_1 = new Matrix([[1, 1, 0, 1], [1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_1 = new Polytope(POINTS=>$F_1);
+my $LW_1 = $P_1->LATTICE_WIDTH;
+my $FW_1 = $P_1->FACET_WIDTHS;
+my $FWmin_1 = minimum($FW_1);
+my $Facets_1 = $P_1->FACETS;
+my $M_1 = $P_1->MINKOWSKI_CONE;
+my $R_1 = $M_1->N_RAYS;
+print("\nVertices:\n");
+print($F_1);
+print("Lattice width: ");
+print($LW_1);
+print("\nFacets: \n");
+print($Facets_1);
+print("Facet widths: ");
+print($FW_1);
+print("\nFacet width (minimal): ");
+print($FWmin_1);
+print("\nRays in Minkowski cone: ");
+print($R_1);
+print("\n");
+
+
+my $F_2 = new Matrix([[1, 1, 0, 1], [1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_2 = new Polytope(POINTS=>$F_2);
+my $LW_2 = $P_2->LATTICE_WIDTH;
+my $FW_2 = $P_2->FACET_WIDTHS;
+my $FWmin_2 = minimum($FW_2);
+my $Facets_2 = $P_2->FACETS;
+my $M_2 = $P_2->MINKOWSKI_CONE;
+my $R_2 = $M_2->N_RAYS;
+print("\nVertices:\n");
+print($F_2);
+print("Lattice width: ");
+print($LW_2);
+print("\nFacets: \n");
+print($Facets_2);
+print("Facet widths: ");
+print($FW_2);
+print("\nFacet width (minimal): ");
+print($FWmin_2);
+print("\nRays in Minkowski cone: ");
+print($R_2);
+print("\n");
+
+
+my $F_3 = new Matrix([[1, 1, 0, 1], [1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_3 = new Polytope(POINTS=>$F_3);
+my $LW_3 = $P_3->LATTICE_WIDTH;
+my $FW_3 = $P_3->FACET_WIDTHS;
+my $FWmin_3 = minimum($FW_3);
+my $Facets_3 = $P_3->FACETS;
+my $M_3 = $P_3->MINKOWSKI_CONE;
+my $R_3 = $M_3->N_RAYS;
+print("\nVertices:\n");
+print($F_3);
+print("Lattice width: ");
+print($LW_3);
+print("\nFacets: \n");
+print($Facets_3);
+print("Facet widths: ");
+print($FW_3);
+print("\nFacet width (minimal): ");
+print($FWmin_3);
+print("\nRays in Minkowski cone: ");
+print($R_3);
+print("\n");
+
+
+my $F_4 = new Matrix([[1, 1, 0, 1], [1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_4 = new Polytope(POINTS=>$F_4);
+my $LW_4 = $P_4->LATTICE_WIDTH;
+my $FW_4 = $P_4->FACET_WIDTHS;
+my $FWmin_4 = minimum($FW_4);
+my $Facets_4 = $P_4->FACETS;
+my $M_4 = $P_4->MINKOWSKI_CONE;
+my $R_4 = $M_4->N_RAYS;
+print("\nVertices:\n");
+print($F_4);
+print("Lattice width: ");
+print($LW_4);
+print("\nFacets: \n");
+print($Facets_4);
+print("Facet widths: ");
+print($FW_4);
+print("\nFacet width (minimal): ");
+print($FWmin_4);
+print("\nRays in Minkowski cone: ");
+print($R_4);
+print("\n");
+
+
+my $F_5 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_5 = new Polytope(POINTS=>$F_5);
+my $LW_5 = $P_5->LATTICE_WIDTH;
+my $FW_5 = $P_5->FACET_WIDTHS;
+my $FWmin_5 = minimum($FW_5);
+my $Facets_5 = $P_5->FACETS;
+my $M_5 = $P_5->MINKOWSKI_CONE;
+my $R_5 = $M_5->N_RAYS;
+print("\nVertices:\n");
+print($F_5);
+print("Lattice width: ");
+print($LW_5);
+print("\nFacets: \n");
+print($Facets_5);
+print("Facet widths: ");
+print($FW_5);
+print("\nFacet width (minimal): ");
+print($FWmin_5);
+print("\nRays in Minkowski cone: ");
+print($R_5);
+print("\n");
+
+
+my $F_6 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_6 = new Polytope(POINTS=>$F_6);
+my $LW_6 = $P_6->LATTICE_WIDTH;
+my $FW_6 = $P_6->FACET_WIDTHS;
+my $FWmin_6 = minimum($FW_6);
+my $Facets_6 = $P_6->FACETS;
+my $M_6 = $P_6->MINKOWSKI_CONE;
+my $R_6 = $M_6->N_RAYS;
+print("\nVertices:\n");
+print($F_6);
+print("Lattice width: ");
+print($LW_6);
+print("\nFacets: \n");
+print($Facets_6);
+print("Facet widths: ");
+print($FW_6);
+print("\nFacet width (minimal): ");
+print($FWmin_6);
+print("\nRays in Minkowski cone: ");
+print($R_6);
+print("\n");
+
+
+my $F_7 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_7 = new Polytope(POINTS=>$F_7);
+my $LW_7 = $P_7->LATTICE_WIDTH;
+my $FW_7 = $P_7->FACET_WIDTHS;
+my $FWmin_7 = minimum($FW_7);
+my $Facets_7 = $P_7->FACETS;
+my $M_7 = $P_7->MINKOWSKI_CONE;
+my $R_7 = $M_7->N_RAYS;
+print("\nVertices:\n");
+print($F_7);
+print("Lattice width: ");
+print($LW_7);
+print("\nFacets: \n");
+print($Facets_7);
+print("Facet widths: ");
+print($FW_7);
+print("\nFacet width (minimal): ");
+print($FWmin_7);
+print("\nRays in Minkowski cone: ");
+print($R_7);
+print("\n");
+
+
+my $F_8 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_8 = new Polytope(POINTS=>$F_8);
+my $LW_8 = $P_8->LATTICE_WIDTH;
+my $FW_8 = $P_8->FACET_WIDTHS;
+my $FWmin_8 = minimum($FW_8);
+my $Facets_8 = $P_8->FACETS;
+my $M_8 = $P_8->MINKOWSKI_CONE;
+my $R_8 = $M_8->N_RAYS;
+print("\nVertices:\n");
+print($F_8);
+print("Lattice width: ");
+print($LW_8);
+print("\nFacets: \n");
+print($Facets_8);
+print("Facet widths: ");
+print($FW_8);
+print("\nFacet width (minimal): ");
+print($FWmin_8);
+print("\nRays in Minkowski cone: ");
+print($R_8);
+print("\n");
+
+
+my $F_9 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_9 = new Polytope(POINTS=>$F_9);
+my $LW_9 = $P_9->LATTICE_WIDTH;
+my $FW_9 = $P_9->FACET_WIDTHS;
+my $FWmin_9 = minimum($FW_9);
+my $Facets_9 = $P_9->FACETS;
+my $M_9 = $P_9->MINKOWSKI_CONE;
+my $R_9 = $M_9->N_RAYS;
+print("\nVertices:\n");
+print($F_9);
+print("Lattice width: ");
+print($LW_9);
+print("\nFacets: \n");
+print($Facets_9);
+print("Facet widths: ");
+print($FW_9);
+print("\nFacet width (minimal): ");
+print($FWmin_9);
+print("\nRays in Minkowski cone: ");
+print($R_9);
+print("\n");
+
+
+my $F_10 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_10 = new Polytope(POINTS=>$F_10);
+my $LW_10 = $P_10->LATTICE_WIDTH;
+my $FW_10 = $P_10->FACET_WIDTHS;
+my $FWmin_10 = minimum($FW_10);
+my $Facets_10 = $P_10->FACETS;
+my $M_10 = $P_10->MINKOWSKI_CONE;
+my $R_10 = $M_10->N_RAYS;
+print("\nVertices:\n");
+print($F_10);
+print("Lattice width: ");
+print($LW_10);
+print("\nFacets: \n");
+print($Facets_10);
+print("Facet widths: ");
+print($FW_10);
+print("\nFacet width (minimal): ");
+print($FWmin_10);
+print("\nRays in Minkowski cone: ");
+print($R_10);
+print("\n");
+
+
+my $F_11 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_11 = new Polytope(POINTS=>$F_11);
+my $LW_11 = $P_11->LATTICE_WIDTH;
+my $FW_11 = $P_11->FACET_WIDTHS;
+my $FWmin_11 = minimum($FW_11);
+my $Facets_11 = $P_11->FACETS;
+my $M_11 = $P_11->MINKOWSKI_CONE;
+my $R_11 = $M_11->N_RAYS;
+print("\nVertices:\n");
+print($F_11);
+print("Lattice width: ");
+print($LW_11);
+print("\nFacets: \n");
+print($Facets_11);
+print("Facet widths: ");
+print($FW_11);
+print("\nFacet width (minimal): ");
+print($FWmin_11);
+print("\nRays in Minkowski cone: ");
+print($R_11);
+print("\n");
+
+
+my $F_12 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_12 = new Polytope(POINTS=>$F_12);
+my $LW_12 = $P_12->LATTICE_WIDTH;
+my $FW_12 = $P_12->FACET_WIDTHS;
+my $FWmin_12 = minimum($FW_12);
+my $Facets_12 = $P_12->FACETS;
+my $M_12 = $P_12->MINKOWSKI_CONE;
+my $R_12 = $M_12->N_RAYS;
+print("\nVertices:\n");
+print($F_12);
+print("Lattice width: ");
+print($LW_12);
+print("\nFacets: \n");
+print($Facets_12);
+print("Facet widths: ");
+print($FW_12);
+print("\nFacet width (minimal): ");
+print($FWmin_12);
+print("\nRays in Minkowski cone: ");
+print($R_12);
+print("\n");
+
+
+my $F_13 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_13 = new Polytope(POINTS=>$F_13);
+my $LW_13 = $P_13->LATTICE_WIDTH;
+my $FW_13 = $P_13->FACET_WIDTHS;
+my $FWmin_13 = minimum($FW_13);
+my $Facets_13 = $P_13->FACETS;
+my $M_13 = $P_13->MINKOWSKI_CONE;
+my $R_13 = $M_13->N_RAYS;
+print("\nVertices:\n");
+print($F_13);
+print("Lattice width: ");
+print($LW_13);
+print("\nFacets: \n");
+print($Facets_13);
+print("Facet widths: ");
+print($FW_13);
+print("\nFacet width (minimal): ");
+print($FWmin_13);
+print("\nRays in Minkowski cone: ");
+print($R_13);
+print("\n");
+
+
+my $F_14 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $P_14 = new Polytope(POINTS=>$F_14);
+my $LW_14 = $P_14->LATTICE_WIDTH;
+my $FW_14 = $P_14->FACET_WIDTHS;
+my $FWmin_14 = minimum($FW_14);
+my $Facets_14 = $P_14->FACETS;
+my $M_14 = $P_14->MINKOWSKI_CONE;
+my $R_14 = $M_14->N_RAYS;
+print("\nVertices:\n");
+print($F_14);
+print("Lattice width: ");
+print($LW_14);
+print("\nFacets: \n");
+print($Facets_14);
+print("Facet widths: ");
+print($FW_14);
+print("\nFacet width (minimal): ");
+print($FWmin_14);
+print("\nRays in Minkowski cone: ");
+print($R_14);
+print("\n");
+
+

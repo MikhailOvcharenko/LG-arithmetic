@@ -1,0 +1,7 @@
+# F_623
+# List of 3d irreducible Minkowski summands
+
+
+use application "polytope";
+
+

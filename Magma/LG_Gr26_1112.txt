@@ -1,0 +1,39 @@
+Loading startup file "LG_Gr26_1112.m"
+
+432*t^2*D^4 + 104*t*D^4 + 1728*t^2*D^3 - D^4 + 208*t*D^3 + 2436*t^2*D^2 + 162*t*D^2 + 1416*t^2*D + 58*t*D + 288*t^2 +
+    8*t
+Degree 1: computing
+Degree 1: computing
+Degree 1: computing
+[ [*
+    $.1,
+
+    [0 1 0 0]
+    [0 0 1 0]
+    [0 0 0 1]
+    [0 0 0 0]
+*], [*
+    $.1 - 1/108,
+
+    [0 0 0 0]
+    [0 0 0 0]
+    [0 0 0 1]
+    [0 0 0 0]
+*], [*
+    $.1 + 1/4,
+
+    [0 0 0 0]
+    [0 0 0 0]
+    [0 0 0 1]
+    [0 0 0 0]
+*], [* Infinity,
+
+    [2/3   0   0   0]
+    [  0 1/2   0   0]
+    [  0   0 1/2   0]
+    [  0   0   0 1/3]
+*] ]
+Degree 1: computing
+Degree 1: computing
+Degree 1: computing
+1

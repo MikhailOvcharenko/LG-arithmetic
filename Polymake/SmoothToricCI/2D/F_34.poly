@@ -1,0 +1,186 @@
+# List of 2d irreducible Minkowski summands
+
+
+use application "polytope";
+
+
+my $F_0 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $P_0 = new Polytope(POINTS=>$F_0);
+my $W_0 = $P_0->LATTICE_WIDTH;
+print("Vertices:\n");
+print($F_0);
+print("Lattice width: ");
+print($W_0);
+print("\n");
+
+
+my $F_1 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_1 = new Polytope(POINTS=>$F_1);
+my $W_1 = $P_1->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_1);
+print("Lattice width: ");
+print($W_1);
+print("\n");
+
+
+my $F_2 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_2 = new Polytope(POINTS=>$F_2);
+my $W_2 = $P_2->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_2);
+print("Lattice width: ");
+print($W_2);
+print("\n");
+
+
+my $F_3 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $P_3 = new Polytope(POINTS=>$F_3);
+my $W_3 = $P_3->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_3);
+print("Lattice width: ");
+print($W_3);
+print("\n");
+
+
+my $F_4 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $P_4 = new Polytope(POINTS=>$F_4);
+my $W_4 = $P_4->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_4);
+print("Lattice width: ");
+print($W_4);
+print("\n");
+
+
+my $F_5 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_5 = new Polytope(POINTS=>$F_5);
+my $W_5 = $P_5->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_5);
+print("Lattice width: ");
+print($W_5);
+print("\n");
+
+
+my $F_6 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_6 = new Polytope(POINTS=>$F_6);
+my $W_6 = $P_6->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_6);
+print("Lattice width: ");
+print($W_6);
+print("\n");
+
+
+my $F_7 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_7 = new Polytope(POINTS=>$F_7);
+my $W_7 = $P_7->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_7);
+print("Lattice width: ");
+print($W_7);
+print("\n");
+
+
+my $F_8 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_8 = new Polytope(POINTS=>$F_8);
+my $W_8 = $P_8->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_8);
+print("Lattice width: ");
+print($W_8);
+print("\n");
+
+
+my $F_9 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_9 = new Polytope(POINTS=>$F_9);
+my $W_9 = $P_9->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_9);
+print("Lattice width: ");
+print($W_9);
+print("\n");
+
+
+my $F_10 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_10 = new Polytope(POINTS=>$F_10);
+my $W_10 = $P_10->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_10);
+print("Lattice width: ");
+print($W_10);
+print("\n");
+
+
+my $F_11 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_11 = new Polytope(POINTS=>$F_11);
+my $W_11 = $P_11->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_11);
+print("Lattice width: ");
+print($W_11);
+print("\n");
+
+
+my $F_12 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_12 = new Polytope(POINTS=>$F_12);
+my $W_12 = $P_12->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_12);
+print("Lattice width: ");
+print($W_12);
+print("\n");
+
+
+my $F_13 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $P_13 = new Polytope(POINTS=>$F_13);
+my $W_13 = $P_13->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_13);
+print("Lattice width: ");
+print($W_13);
+print("\n");
+
+
+my $F_14 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $P_14 = new Polytope(POINTS=>$F_14);
+my $W_14 = $P_14->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_14);
+print("Lattice width: ");
+print($W_14);
+print("\n");
+
+
+my $F_15 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_15 = new Polytope(POINTS=>$F_15);
+my $W_15 = $P_15->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_15);
+print("Lattice width: ");
+print($W_15);
+print("\n");
+
+
+my $F_16 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_16 = new Polytope(POINTS=>$F_16);
+my $W_16 = $P_16->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_16);
+print("Lattice width: ");
+print($W_16);
+print("\n");
+
+
+my $F_17 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $P_17 = new Polytope(POINTS=>$F_17);
+my $W_17 = $P_17->LATTICE_WIDTH;
+print("\nVertices:\n");
+print($F_17);
+print("Lattice width: ");
+print($W_17);
+print("\n");
+
+
