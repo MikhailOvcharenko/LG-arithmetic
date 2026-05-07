@@ -102,13 +102,13 @@ def matrix_splitting(matrix, decomposition_list):
                               list(decomposition_list)).to_matrix()
 
     # Compute the reduced row echelon form of the permuted matrix
-    permuted_matrix = matrix*permutation
+    permuted_matrix = matrix * permutation
     permuted_matrix_echelon = matrix_reduce(permuted_matrix)
 
     # Output
     return [complement_list,
             permuted_matrix_echelon[:, :matrix.rank()],
-            (-1)*permuted_matrix_echelon[:, matrix.rank():]]
+            (-1) * permuted_matrix_echelon[:, matrix.rank():]]
 
 
 def relations_matrix_bases(matrix, frac_field):
@@ -161,7 +161,7 @@ def relations_matrix_bases(matrix, frac_field):
             if det(minor_matrix) == 0:
                 continue
         else:
-            if not (det(minor_matrix) in [1, -1]):
+            if det(minor_matrix) not in [1, -1]:
                 continue
         basis = vector(minor_indexes) + vector([1]*kernel_rank)
 
@@ -247,10 +247,10 @@ def GL_bounded(matrix_size, matrix_bound):
         frozenset({[-1], [1]})
     """
     # Sanity check
-    if not ((matrix_size in ZZ) and matrix_size > 0):
+    if not (matrix_size in ZZ and matrix_size > 0):
         raise ValueError("Incorrect matrix size.")
 
-    if not ((matrix_bound in ZZ) and matrix_bound > 0):
+    if not (matrix_bound in ZZ and matrix_bound > 0):
         raise ValueError("Incorrect matrix bound.")
 
     # Construct the set of invertible bounded matrices
@@ -342,22 +342,17 @@ def reflexive_polytope_type(laurent_polynomial):
                                   "for n != 2, 3.")
 
     # Construct the Newton polytope
-    monomials_list = []
-    for i in laurent_polynomial.monomials():
-        monomials_list.append([i.degree(gen) for gen in parent_ring.gens()])
-    newton_polytope = LatticePolytope(monomials_list)
+    monomials_list = [[i.degree(gen) for gen in parent_ring.gens()]
+                      for i in laurent_polynomial.monomials()]
+    newton_polytope = LatticePolytope(monomials_list).normal_form()
 
     # Build the list of combinatorially isomorphic polytopes
-    polytopes_list = []
-    for i in ReflexivePolytopes(parent_ring.ngens()):
-        if (newton_polytope.normal_form() == i.normal_form()):
-            polytopes_list.append(i)
-
-    if len(polytopes_list) == 1:
-        return polytopes_list[0]
-
-    raise ValueError("The Newton polytope of the Laurent polynomial is "
-                     "not reflexive.")
+    try:
+        return next(i for i in ReflexivePolytopes(parent_ring.ngens())
+                    if newton_polytope == i.normal_form())
+    except StopIteration:
+        raise ValueError("The Newton polytope of the Laurent polynomial is "
+                         "not reflexive.")
 
 
 def period_sequence(laurent_polynomial, sequence_length):
@@ -477,7 +472,7 @@ def largest_mutation_factor(laurent_polynomial):
     poly_ring_flattened = poly_ring_flattening.codomain()
 
     # Sanity check
-    if not (poly_ring_flattened.base_ring() in (ZZ, QQ)):
+    if poly_ring_flattened.base_ring() not in (ZZ, QQ):
         raise TypeError('Incorrect coefficient ring.')
 
     # Compute the minimal degree of a Laurent polynomial in the last generator
@@ -551,7 +546,7 @@ def laurent_polynomial_mutation(laurent_polynomial, mutation_factor):
     frac_field = parent_ring.fraction_field()
 
     # Sanity check
-    if not (mutation_factor in parent_ring.polynomial_ring()):
+    if mutation_factor not in parent_ring.polynomial_ring():
         raise TypeError('Incorrect mutation factor.')
 
     # Compute the maximal and minimal degrees in the last generator
@@ -571,7 +566,7 @@ def laurent_polynomial_mutation(laurent_polynomial, mutation_factor):
     # Compute the mutated Laurent polynomial
     output = 0
     for i in range(min_degree, max_degree + 1):
-        if (i != 0):
+        if i != 0:
             output += laurent_polynomial.coefficient(gen**i) * \
                 frac_field(gen)**i * power(mutation_factor, i)
         else:
@@ -581,7 +576,7 @@ def laurent_polynomial_mutation(laurent_polynomial, mutation_factor):
     result = output(parent_ring.gens())
 
     # Sanity check
-    if not (result in parent_ring):
+    if result not in parent_ring:
         raise TypeError('Incorrect Laurent polynomial or a mutation factor.')
 
     return result
@@ -621,15 +616,16 @@ def mutation_evaluation(laurent_polynomial, mutation_data):
     poly_ring = parent_ring.polynomial_ring()
 
     # Sanity check
-    if not (len(mutation_data) == 3):
+    if len(mutation_data) != 3:
         raise TypeError('Incorrect mutation data.')
 
+    MS = MatrixSpace(ZZ, parent_ngens)
     for i in range(3):
         if i % 2 == 0:
-            if not (mutation_data[i] in MatrixSpace(ZZ, parent_ngens)):
+            if mutation_data[i] not in MS:
                 raise TypeError('Incorrect mutation data.')
         else:
-            if not (mutation_data[1] in parent_ring):
+            if mutation_data[1] not in parent_ring:
                 raise TypeError('Incorrect mutation data.')
 
     # Evaluate the mutation
@@ -691,14 +687,14 @@ def find_mutation_factors(laurent_polynomial_input, laurent_polynomial_output,
     if laurent_polynomial_input not in parent_ring:
         raise TypeError('Incorrect input Laurent polynomial.')
 
-    if not (parent_ring.base_ring() in (ZZ, QQ)):
+    if parent_ring.base_ring() not in (ZZ, QQ):
         raise TypeError('Incorrect coefficient ring.')
 
     # Recursion implementation
-    if (recursion_depth == len(matrices_list) - 1):
+    if recursion_depth == len(matrices_list) - 1:
         GL_image = GL_action(laurent_polynomial_input,
                              matrices_list[recursion_depth])
-        if (GL_image == laurent_polynomial_output):
+        if GL_image == laurent_polynomial_output:
             return [matrices_list[recursion_depth]]
         else:
             return []
@@ -712,7 +708,7 @@ def find_mutation_factors(laurent_polynomial_input, laurent_polynomial_output,
                                                laurent_polynomial_output,
                                                matrices_list,
                                                recursion_depth + 1)
-                if (output != []):
+                if output:
                     return ([matrices_list[recursion_depth], D] + output)
     return []
 
@@ -777,11 +773,11 @@ def find_mutation(laurent_in, laurent_out, words_tuple, steps):
         raise TypeError('Incorrect output Laurent polynomial.')
 
     # Sanity check
-    if not (laurent_in in parent_ring):
+    if laurent_in not in parent_ring:
         raise TypeError('The parent Laurent polynomial rings are different.')
 
     # Sanity check
-    if not (steps in ZZ) or not (steps > -1):
+    if not (steps in ZZ and steps > -1):
         raise TypeError('Incorrect steps number.')
 
     # Define the global variables for the wrapper find_mutation_call
@@ -805,7 +801,7 @@ def find_mutation(laurent_in, laurent_out, words_tuple, steps):
         indexes_tuple = Tuples(range(len(words_tuple)), steps + 1)
         for result in p.imap_unordered(find_mutation_call,
                                        tqdm(indexes_tuple), chunksize=1):
-            if (result != []):
+            if result:
                 output.append(result)
                 p.terminate()
                 break
@@ -848,7 +844,7 @@ def mutation_presentation_routine(mutation_list, matrices_list):
         [-1  0 -1], x*y^2 + y^2, [ 1  1  1]
         ]
     """
-    if (len(matrices_list) != 2):
+    if len(matrices_list) != 2:
         raise ValueError('Incorrect matrices data.')
     parent_ring = mutation_list[0].parent()
     laurent_ring = \
@@ -862,28 +858,25 @@ def mutation_presentation_routine(mutation_list, matrices_list):
     for i in matrices_list:
         prod *= i
 
-    coord_image = []
-    for i in range(matrices_list[0].nrows()):
-        coord_image.append(GL_action(laurent_ring.gen(i), prod))
+    coord_image = [GL_action(laurent_ring.gen(i), prod)
+                   for i in range(matrices_list[0].nrows())]
 
     # Twist the original functions by the obtained monomials
-    pre_converted = []
-    for i in range(len(mutation_list)):
-        pre_converted.append(mutation_list[i] / coord_image[i])
+    pre_converted = [mutation_list[i] / coord_image[i]
+                     for i in range(len(mutation_list))]
 
     # Act on the obtained functions by the inverse of the second matrix
-    converted = []
     inv = matrices_list[1].inverse()
-    for i in range(len(mutation_list)):
-        converted.append(GL_action(pre_converted[i], inv))
+    converted = [GL_action(pre_converted[i], inv)
+                 for i in range(len(mutation_list))]
 
     # Check if we really obtain the required powers of the same polynomial
     bases = set()
     for i in range(len(mutation_list)):
         ind = matrices_list[0].transpose()[-1][i]
-        if (ind != 0):
+        if ind != 0:
             temp = power(converted[i], sign(ind))
-            if (frac_field(temp).denominator() != 1):
+            if frac_field(temp).denominator() != 1:
                 return []
             else:
                 temp = frac_field(temp).numerator()
@@ -893,8 +886,8 @@ def mutation_presentation_routine(mutation_list, matrices_list):
 
             c = 1
             for j, k in poly_ring_reduced(temp).factor():
-                if (k % (ind*sign(ind)) == 0):
-                    c *= power(j, (k / (ind*sign(ind))))
+                if k % (ind * sign(ind)) == 0:
+                    c *= power(j, (k / (ind * sign(ind))))
                 else:
                     return []
             bases.add(c)
@@ -1011,12 +1004,9 @@ def newton_polytope(laurent_polynomial):
     if not isinstance(parent_ring, LaurentPolynomialRing_generic):
         raise TypeError("The argument should be a Laurent polynomial.")
 
-    monomials_list = []
-    for i in laurent_polynomial.monomials():
-        monomials_list.append([i.degree(gen) for gen in parent_ring.gens()])
-    newton_polytope = LatticePolytope(monomials_list)
-
-    return newton_polytope
+    monomials_list = [[i.degree(gen) for gen in parent_ring.gens()]
+                      for i in laurent_polynomial.monomials()]
+    return LatticePolytope(monomials_list)
 
 
 # Compute the quantum period of a Fano CI in Gr(2, N)
@@ -1076,7 +1066,7 @@ def period_coeff(k, multidegree, d):
 
     multiple = 1
     for i in range(lmd + 1):
-        if (i == 0):
+        if i == 0:
             multiple *= factorial(d * d_0)
         else:
             multiple *= factorial(d * multidegree[i - 1])
@@ -1205,7 +1195,7 @@ def find_smooth_FRST(laurent_poly, n):
 
     matrix_list = [identity_matrix(n_gens)]
 
-    if (n > 0):
+    if n > 0:
         matrix_list = matrix_words(GL_generators(n_gens), n)
 
     for matrix_word in matrix_list:
