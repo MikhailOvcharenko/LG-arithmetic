@@ -2,7 +2,7 @@ from sage.all import (ZZ, matrix, Permutation, vector, det,
                       identity_matrix, zero_matrix, LatticePolytope, factor,
                       Polyhedron, binomial, factorial, ToricVariety,
                       lcm, QQ, mrange, PolynomialRing, gcd, divisors,
-                      diagonal_matrix, PointConfiguration,
+                      diagonal_matrix, PointConfiguration, xgcd,
                       power, sign, ReflexivePolytopes, Combinations, Tuples)
 from sage.matrix.matrix_space import MatrixSpace
 from sage.rings.fraction_field import FractionField_generic
@@ -266,7 +266,7 @@ def GL_bounded(matrix_size, matrix_bound):
 def matrix_words(generators_tuple, words_length):
     """
     Returns a frozenset of immutable matrices obtained as a words of length
-    words_len in a tuple of matrices generators_tuple and its inverses.
+    words_length in a tuple of matrices generators_tuple and its inverses.
 
     Arguments:
         generators_tuple : A tuple of invertible matrices of same size.
@@ -1141,8 +1141,16 @@ def poly_divisors(input_polynomial):
 def find_smooth_FRST(laurent_poly, n):
     """
     Bruteforces nearest mutations of the Laurent polynomial
-    with respect to n, and tries to fined a smooth fine regular
+    with respect to n, and tries to find a smooth fine regular
     star triangulation of the dual of the Newton polytope.
+
+    The triangulation has the star center at the origin,
+    as required for maximal partial crepant resolutions.
+
+    We search only for FRS triangulations supported on the set
+    [origin + vertices] instead of the whole integral points set
+    in order to avoid huge computations.
+    In other words, this is only a sufficient condition.
 
     WARNING: could be heavy on CPU and RAM.
 
@@ -1154,24 +1162,22 @@ def find_smooth_FRST(laurent_poly, n):
         None.
 
     Example:
-        sage: R.<a_22,a_11,a_21,a_31> = LaurentPolynomialRing(QQ)
-        sage: LG = (a_22 * a_11^-1 + a_22*a_21^-1 + a_31^-1 +
-        ....:       a_31 * a_21^-1 + a_22^-1 + a_21 + a_11)
-        sage: find_smooth_FRST(LG, 1)  # optional - topcom
-        Triangulation...
+        sage: R.<a,b,c,d> = LaurentPolynomialRing(QQ)
+        sage: LG = (a+b+c+d+1)^3*(1/b/d+1/a/d+1/a/c);
+        sage: find_smooth_FRST(LG, 1)
         Vertices:
-        [ 1  1 -2 -2  1  1  1  1]
-        [-1  2 -1 -1  2 -1  2 -1]
-        [ 2  2 -1 -1 -1 -1 -1 -1]
-        [ 1  1  1 -2 -2  1  1 -2]
+        [(0, -1, 0, 0, 0, 0, 1, 1, 1),
+         (0, -1, 0, 0, 0, 1, 0, 0, 1),
+         (0, 0, -1, 0, 1, 0, -1, 0, 0),
+         (0, 1, 0, -1, 0, 0, 0, 0, 0)]
         Triangulation:
-        [0 0 0 0 0]
-        [1 1 2 2 3]
-        [2 2 3 4 4]
-        [3 4 4 5 5]
-        [4 6 5 6 7]
+        [(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0),
+         (1, 1, 1, 1, 1, 1, 1, 1, 1, 1, 2, 3, 3, 3, 3),
+         (2, 2, 2, 3, 3, 3, 4, 4, 5, 6, 3, 4, 4, 5, 6),
+         (3, 3, 5, 4, 4, 6, 5, 7, 6, 7, 5, 5, 7, 6, 7),
+         (5, 6, 6, 5, 7, 7, 8, 8, 8, 8, 6, 8, 8, 8, 8)]
         Star origin: 0
-        (1, -1, 2, 1)
+        M(0, 0, 0, 0)
         Monomial change of variables for a mutation:
         [1 0 0 0]
         [0 1 0 0]
@@ -1180,10 +1186,7 @@ def find_smooth_FRST(laurent_poly, n):
         Mutation factor:
         1
         Mutated Laurent polynomial:
-        (a_22^-1*a_11^-1*a_21^-1*a_31^-1) * (a_22*a_11^2*a_21*a_31 +
-         a_22*a_11*a_21^2*a_31 + a_22^2*a_11*a_31 + a_22^2*a_21*a_31 +
-         a_22*a_11*a_31^2 + a_22*a_11*a_21 + a_11*a_21*a_31)
-        ...
+        (a^-1*b^-1*c^-1*d^-2) * (c + 1) * (a*c + a + b) * (a*d + b*d + d + 1)^3
     """
     poly_parent = laurent_poly.parent()
     poly_ring = poly_parent.polynomial_ring()
@@ -1208,35 +1211,35 @@ def find_smooth_FRST(laurent_poly, n):
             if not newton.is_reflexive():
                 continue
             newton_polar = newton.polar()
-            pointConf = PointConfiguration(newton_polar.vertices())
-            newton_polar_length = len(newton_polar.vertices())
+            points = [vector(ZZ, p) for p in newton_polar.integral_points()];
+            origin = LatticePolytope(points).interior_points()[0];
+            origin_index = points.index(origin);
+            points_red = [vector(ZZ, origin)] + [vector(ZZ, p) for p in newton_polar.vertices()];
+            origin_red_index = points_red.index(origin);
+
+            # Remove _red below to look for a general FRS triangulation
+            # WARNING: TOPCOM memory consumption is usually huge
+            
+            pointConf = PointConfiguration(points_red)
             pointConf_restricted = pointConf.\
                 restrict_to_regular_triangulations(regular=True).\
-                restrict_to_fine_triangulations(fine=True)
-            for star_origin in range(newton_polar_length):
-                print("Triangulation...")
-                triangulation_list = \
-                    list(pointConf_restricted.\
-                         restrict_to_star_triangulations(star=star_origin).\
-                         triangulations())
-                for triangulation in triangulation_list:
-                    if ToricVariety(triangulation.fan()).is_smooth():
-                        print("Vertices:")
-                        print(matrix([newton_polar.Vrepresentation(i)
-                                      for i in range(newton_polar_length)]).\
-                              transpose())
-                        print("Triangulation:")
-                        print(matrix(triangulation).transpose())
-                        print("Star origin: " + str(star_origin))
-                        print(vector(newton_polar.\
-                                     Vrepresentation(star_origin)))
-                        print("Monomial change of variables for a mutation:")
-                        print(matrix_word)
-                        print("Mutation factor:")
-                        print(factor(mutation_factor))
-                        print("Mutated Laurent polynomial:")
-                        print(factor(poly))
-                        print("\n")
+                restrict_to_fine_triangulations(fine=True).\
+                restrict_to_star_triangulations(star=origin_red_index);
+            for triangulation in pointConf_restricted.triangulations():
+                if ToricVariety(triangulation.fan()).is_smooth():
+                    print("Vertices:")
+                    print(list(matrix(points_red).transpose()))
+                    print("Triangulation:")
+                    print(list(matrix(triangulation).transpose()))
+                    print("Star origin: " + str(origin_red_index))
+                    print(points_red[origin_red_index]);
+                    print("Monomial change of variables for a mutation:")
+                    print(matrix_word)
+                    print("Mutation factor:")
+                    print(factor(mutation_factor))
+                    print("Mutated Laurent polynomial:")
+                    print(factor(poly))
+                    print("\n")
 
 
 # Compute face polynomials of the Laurent polynomial
@@ -1257,14 +1260,14 @@ def face_polynomial(laurent_poly, face_dim):
         sage: R.<a_22,a_11,a_21,a_31> = LaurentPolynomialRing(QQ)
         sage: LG = (a_22 * a_11^-1 + a_22*a_21^-1 + a_31^-1 +
         ....:       a_31 * a_21^-1 + a_22^-1 + a_21 + a_11)
-        sage: face_polynomial(LG, 1)
+        sage: face_polynomial(LG, 3)
         FACE No. 7
         Vertices: 4
         Lattice points: 4
         Interior lattice points: 0
         Original face polynomial:
-        a_11^-1*a_21^-1) * (a_22*a_11*a_21^2 + a_22^2*a_21 +
-                            a_22*a_11*a_31 + a_11*a_21)
+        (a_11^-1*a_21^-1) * (a_22*a_11*a_21^2 + a_22^2*a_21 +
+                             a_22*a_11*a_31 + a_11*a_21)
         Face polynomial in reduced coordinates
         X_0 + X_1 + X_2 + 1
     """
@@ -1346,7 +1349,7 @@ def face_minkowski_polytopes(laurent_poly, face_dim, refined):
     """
     Computes Newton polytopes of irreducible components
     of face polynomials of the Laurent polynomial
-    (if refined = true, keep face polynomials separately)
+    (if refined=true, keep face polynomials separately)
 
     Arguments:
         laurent_poly : A Laurent polynomial.
@@ -1363,7 +1366,7 @@ def face_minkowski_polytopes(laurent_poly, face_dim, refined):
         sage: R.<a_22,a_11,a_21,a_31> = LaurentPolynomialRing(QQ)
         sage: LG = (a_22 * a_11^-1 + a_22*a_21^-1 + a_31^-1 +
         ....:       a_31 * a_21^-1 + a_22^-1 + a_21 + a_11)
-        sage: face_minkowski_polytopes(LG, 1, True)
+        sage: face_minkowski_polytopes(LG, 3, True)
         [[3-d lattice polytope in 3-d lattice M,
          X_0^2 + X_0*X_1 + X_0*X_2 + X_0 + X_1, 0],
         [3-d lattice polytope in 3-d lattice M,
@@ -1451,3 +1454,340 @@ def face_minkowski_polytopes(laurent_poly, face_dim, refined):
         return Complete_List
     else:
         return List
+
+
+# Present a Laurent polynomial whose Newton polytope is of lattice width one
+# in the form F(x_0, ..., x_{n - 1}) * x_n + G(x_0, ..., x_{n - 1})
+# (and raise an exception if this fails)
+
+def _width_one_exponent_tuple(exponent, n):
+    """
+    Normalize an exponent key returned by monomial_coefficients().
+
+    SageMath uses an integer key for some univariate Laurent polynomial
+    implementations and a tuple-like key for multivariate implementations.
+    """
+    if n == 1:
+        try:
+            return (ZZ(exponent),)
+        except (TypeError, ValueError):
+            return (ZZ(exponent[0]),)
+    return tuple(ZZ(a) for a in exponent)
+
+
+def _width_one_support_exponents(f):
+    """
+    Return the exponent vectors of the nonzero monomials of f.
+
+    In some SageMath versions f.monomials() method calls
+    monomial_coefficients(copy=...), whereas the Laurent polynomial
+    implementation does not accept the 'copy' keyword.
+    """
+    n = f.parent().ngens()
+    return [
+        vector(ZZ, _width_one_exponent_tuple(exponent, n))
+        for exponent in f.monomial_coefficients()
+    ]
+
+
+def _canonical_direction_sign(u):
+    """
+    Choose one of u and -u: the first nonzero entry is positive.
+    """
+    for a in u:
+        if a > 0:
+            return vector(ZZ, u)
+        if a < 0:
+            return -vector(ZZ, u)
+    return vector(ZZ, u)
+
+
+def lattice_width_one_directions(f):
+    """
+    Return all lattice-width-one covectors of Newt(f) modulo sign.
+
+    The output consists of primitive vectors u in ZZ^n such that
+    max_{a in supp(f)} <a,u> - min_{a in supp(f)} <a,u> = 1.
+
+    The Newton polytope is required to be full-dimensional.
+
+    Algorithm:
+        For P = Newt(f), put D = P-P. Then width_P(u) = h_D(u),
+        where h_D is the support function. 
+
+        Hence the integral covectors of width at most one are exactly the
+        lattice points of the bounded rational polytope
+        D^* = {u : <p-q,u> <= 1 for all vertices p,q of P}.
+
+        We enumerate these lattice points and discard zero.
+
+    Example:
+        sage: R.<x,y,z> = LaurentPolynomialRing(QQ)
+        sage: f = x^2 + x*y^2 + y*z^2 + z
+        sage: lattice_width_one_directions(f)
+        [(1, 0, 1)]
+    """
+    R = f.parent()
+
+    if not isinstance(R, LaurentPolynomialRing_generic):
+        raise TypeError("f must belong to a Laurent polynomial ring.")
+    if f.is_zero():
+        raise ValueError("The zero Laurent polynomial has no Newton polytope.")
+
+    n = R.ngens()
+    support = _width_one_support_exponents(f)
+    P = Polyhedron(vertices=[list(a) for a in support], base_ring=QQ)
+
+    if P.dim() != n:
+        raise ValueError(
+            "The Newton polytope is not full-dimensional."
+        )
+
+    vertices = [vector(ZZ, v) for v in P.vertices_list()]
+
+    # Sage inequalities have the form b + a_1*u_1 + ... + a_n*u_n >= 0.
+    # For every unordered pair p,q we impose both
+    #     1 - <p-q,u> >= 0  and  1 + <p-q,u> >= 0.
+    ieqs = []
+    for i in range(len(vertices)):
+        for j in range(i + 1, len(vertices)):
+            difference = vertices[i] - vertices[j]
+            ieqs.append([ZZ(1)] + list(-difference))
+            ieqs.append([ZZ(1)] + list(difference))
+
+    dual_difference_body = Polyhedron(ieqs=ieqs, base_ring=QQ)
+    if not dual_difference_body.is_compact():
+        raise ArithmeticError(
+            "Internal error: the polar of the difference body is not compact."
+        )
+
+    directions = set()
+    for point in dual_difference_body.integral_points():
+        u = vector(ZZ, point)
+        if all(a == 0 for a in u):
+            continue
+
+        levels = [a.dot_product(u) for a in support]
+        if max(levels) - min(levels) == 1:
+            u = _canonical_direction_sign(u)
+            directions.add(tuple(ZZ(a) for a in u))
+
+    if not directions:
+        raise ValueError("The Newton polytope does not have lattice width one.")
+
+    ordered = sorted(
+        directions,
+        key=lambda u: (sum(a*a for a in u), u)
+    )
+    return [vector(ZZ, u) for u in ordered]
+
+
+def _unimodular_matrix_with_last_column(u):
+    """
+    Complete a primitive vector u to a matrix in GL(n,ZZ),
+    with u as its last column.
+
+    This uses elementary extended-gcd row operations, so it does not
+    depend on optional normal-form packages.
+    """
+    u = vector(ZZ, u)
+    n = len(u)
+
+    if n == 0:
+        raise ValueError("The direction vector must be nonempty.")
+    if gcd(list(u)) not in (ZZ(1), ZZ(-1)):
+        raise ValueError("The direction vector must be primitive.")
+
+    # Construct U in GL(n,ZZ) with U*u = e_1.
+    U = identity_matrix(ZZ, n)
+    v = vector(ZZ, u)
+
+    for i in range(1, n):
+        a = ZZ(v[0])
+        b = ZZ(v[i])
+        if b == 0:
+            continue
+
+        g, s, t = xgcd(a, b)  # s*a + t*b = g, with g >= 0
+        E = identity_matrix(ZZ, n)
+        E[0, 0] = s
+        E[0, i] = t
+        E[i, 0] = -b // g
+        E[i, i] = a // g
+
+        U = E * U
+        v = E * v
+
+    if v[0] == -1:
+        E = identity_matrix(ZZ, n)
+        E[0, 0] = -1
+        U = E * U
+        v = E * v
+
+    if v != vector(ZZ, [1] + [0]*(n - 1)):
+        raise ArithmeticError("Failed to complete the primitive vector.")
+
+    # C = U^{-1} has u as its first column. We cyclically move that column
+    # to the end. The resulting M is still unimodular.
+    C = matrix(ZZ, U.inverse())
+    M = matrix(
+        ZZ, n, n,
+        lambda i, j: C[i, (j + 1) % n]
+    )
+
+    if abs(M.det()) != 1 or M.column(n - 1) != u:
+        raise ArithmeticError("Failed to construct the monomial matrix.")
+
+    return M
+
+
+def _validate_width_direction(support, u):
+    """
+    Validate a custom primitive width-one covector.
+    """
+    u = vector(ZZ, u)
+    if len(u) != len(support[0]):
+        raise ValueError("The direction has the wrong dimension.")
+    if gcd(list(u)) not in (ZZ(1), ZZ(-1)):
+        raise ValueError("The direction must be primitive.")
+
+    levels = [a.dot_product(u) for a in support]
+    if max(levels) - min(levels) != 1:
+        raise ValueError("The custom direction does not compute width one.")
+    return _canonical_direction_sign(u)
+
+
+def _split_linear_last_variable(h):
+    """
+    Given h whose last exponents are 0 and 1, return F,G with h = F * x_n + G.
+    """
+    R = h.parent()
+    n = R.ngens()
+    x_n = R.gen(n - 1)
+
+    F = R.zero()
+    G = R.zero()
+
+    for exponent, coefficient in h.monomial_coefficients().items():
+        exponent = _width_one_exponent_tuple(exponent, n)
+
+        last_degree = exponent[-1]
+        base_exponent = exponent[:-1] + (ZZ(0),)
+        base_monomial = R.monomial(*base_exponent)
+
+        if last_degree == 0:
+            G += coefficient * base_monomial
+        elif last_degree == 1:
+            F += coefficient * base_monomial
+        else:
+            raise ArithmeticError(
+                "The normalized polynomial is not linear in the last variable."
+            )
+
+    if h != F*x_n + G:
+        raise ArithmeticError("Failed to split the normalized polynomial.")
+
+    # Explicitly verify that F and G do not involve x_n.
+    for coefficient_part in (F, G):
+        for exponent in _width_one_support_exponents(coefficient_part):
+            if exponent[-1] != 0:
+                raise ArithmeticError("F or G still depends on the last variable.")
+
+    return F, G
+
+
+def linearize_width_one(f, direction=None):
+    """
+    Transform a Laurent polynomial of lattice width one into
+    F(x_1,...,x_{n-1})*x_n + G(x_1,...,x_{n-1}).
+
+    Arguments:
+        f : a nonzero Laurent polynomial with full-dimensional
+            lattice-width-one Newton polytope.
+        direction : optional primitive width-one covector.
+                    If omitted, one is found automatically.
+
+    Returns:
+        A dictionary with keys:
+        - polynomial : the normalized polynomial F*x_n + G;
+        - F, G : Laurent polynomials independent of x_n;
+        - raw_GL_image : GL_action(f, M);
+        - matrix : M in GL(n,ZZ), whose last column is the width covector;
+        - width_direction : the primitive covector u;
+        - minimum_level : m = min <a,u>;
+        - laurent_unit : x_n^(-m), so that
+          polynomial = laurent_unit * raw_GL_image.
+
+    Conventions:
+        GL_action(f,M) sends an exponent row vector a to a*M. Therefore its
+        last coordinate is <a,u> when the last column of M is u.
+
+        A GL(n,ZZ) substitution alone gives last exponents {m,m+1}. Multiplying
+        by the Laurent unit x_n^(-m) translates them to {0,1}. Multiplication
+        by a nonzero Laurent monomial does not change the toric hypersurface.
+
+    Example:
+        sage: R.<X_1, X_2, X_3> = LaurentPolynomialRing(QQ)
+        sage: f = X_1^2 + X_1*X_2^2 + X_2*X_3^2 + X_3
+        sage: output = linearize_width_one(f)
+        sage: output["width_direction"]
+        (1, 0, 1)
+        sage: output["polynomial"] == output["F"]*X_3 + output["G"]
+        True
+    """
+    R = f.parent()
+
+    if not isinstance(R, LaurentPolynomialRing_generic):
+        raise TypeError("f must belong to a Laurent polynomial ring.")
+    if f.is_zero():
+        raise ValueError("f must be nonzero.")
+
+    support = _width_one_support_exponents(f)
+    n = R.ngens()
+
+    if direction is None:
+        u = lattice_width_one_directions(f)[0]
+    else:
+        # Also performs the ambient-dimension check through the polytope.
+        P = Polyhedron(vertices=[list(a) for a in support], base_ring=QQ)
+        if P.dim() != n:
+            raise ValueError(
+                "The Newton polytope is not full-dimensional."
+            )
+        u = _validate_width_direction(support, direction)
+
+    M = _unimodular_matrix_with_last_column(u)
+    raw = GL_action(f, M)
+
+    raw_support = _width_one_support_exponents(raw)
+    last_degrees = [a[-1] for a in raw_support]
+    minimum_level = min(last_degrees)
+    maximum_level = max(last_degrees)
+
+    if maximum_level - minimum_level != 1:
+        raise ArithmeticError(
+            "GL_action did not put the width direction last."
+        )
+
+    x_n = R.gen(n - 1)
+    laurent_unit = x_n**(-minimum_level)
+
+    # GL_action constructs a formal Laurent ring from the generators.  For
+    # one generator Sage may switch between its univariate and one-variable
+    # multivariate Laurent implementations, which need not coerce negative
+    # valuations directly into one another.  Perform the shift in raw's own
+    # parent, then convert the normalized (nonnegative in x_n) result to R.
+    raw_x_n = raw.parent().gen(n - 1)
+    normalized = R(raw_x_n**(-minimum_level) * raw)
+    F, G = _split_linear_last_variable(normalized)
+
+    return {
+        "polynomial": normalized,
+        "F": F,
+        "G": G,
+        "raw_GL_image": raw,
+        "matrix": M,
+        "width_direction": u,
+        "minimum_level": minimum_level,
+        "laurent_unit": laurent_unit,
+    }
