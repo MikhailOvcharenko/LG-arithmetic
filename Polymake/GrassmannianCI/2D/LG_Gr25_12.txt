@@ -1,7 +1,13 @@
 Vertices:
+1 0 2
 1 1 0
-1 0 1
-1 0 0
+1 2 0
+Lattice width: 1
+
+Vertices:
+1 0 2
+1 1 0
+1 2 0
 Lattice width: 1
 
 Vertices:
@@ -11,51 +17,21 @@ Vertices:
 Lattice width: 1
 
 Vertices:
-1 1 0
-1 0 1
 1 0 0
+1 1 0
+1 0 2
 Lattice width: 1
 
 Vertices:
+1 0 2
 1 1 0
-1 0 1
-1 0 0
-Lattice width: 1
-
-Vertices:
-1 1 0
-1 0 1
-1 0 0
-Lattice width: 1
-
-Vertices:
-1 0 0
-1 0 1
 1 2 0
 Lattice width: 1
 
 Vertices:
-1 0 0
-1 0 1
-1 2 0
-Lattice width: 1
-
-Vertices:
+1 0 2
 1 1 0
 1 0 1
-1 0 0
-Lattice width: 1
-
-Vertices:
-1 1 0
-1 0 1
-1 0 0
-Lattice width: 1
-
-Vertices:
-1 1 0
-1 0 1
-1 0 0
 Lattice width: 1
 
 Vertices:
@@ -77,31 +53,43 @@ Vertices:
 Lattice width: 1
 
 Vertices:
+1 0 2
 1 1 0
-1 0 1
-1 0 0
-Lattice width: 1
-
-Vertices:
-1 1 0
-1 0 1
-1 0 0
-Lattice width: 1
-
-Vertices:
-1 0 0
-1 0 1
 1 2 0
 Lattice width: 1
 
 Vertices:
+1 2 0
 1 1 0
 1 0 1
-1 0 0
 Lattice width: 1
 
 Vertices:
+1 0 2
+1 1 0
+1 2 0
+Lattice width: 1
+
+Vertices:
+1 0 0
+1 1 0
+1 0 2
+Lattice width: 1
+
+Vertices:
+1 0 2
+1 1 0
+1 2 0
+Lattice width: 1
+
+Vertices:
+1 2 0
 1 1 0
 1 0 1
-1 0 0
+Lattice width: 1
+
+Vertices:
+1 0 2
+1 1 0
+1 2 0
 Lattice width: 1

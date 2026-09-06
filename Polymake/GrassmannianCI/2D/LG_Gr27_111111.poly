@@ -54,7 +54,7 @@ print($W_4);
 print("\n");
 
 
-my $F_5 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_5 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_5 = new Polytope(POINTS=>$F_5);
 my $W_5 = $P_5->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -64,7 +64,7 @@ print($W_5);
 print("\n");
 
 
-my $F_6 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
+my $F_6 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_6 = new Polytope(POINTS=>$F_6);
 my $W_6 = $P_6->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -84,7 +84,7 @@ print($W_7);
 print("\n");
 
 
-my $F_8 = new Matrix([[1, 2, 0], [1, 1, 0], [1, 0, 1]]);
+my $F_8 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_8 = new Polytope(POINTS=>$F_8);
 my $W_8 = $P_8->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -104,7 +104,7 @@ print($W_9);
 print("\n");
 
 
-my $F_10 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_10 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_10 = new Polytope(POINTS=>$F_10);
 my $W_10 = $P_10->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -114,7 +114,7 @@ print($W_10);
 print("\n");
 
 
-my $F_11 = new Matrix([[1, 2, 0], [1, 1, 0], [1, 0, 1]]);
+my $F_11 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_11 = new Polytope(POINTS=>$F_11);
 my $W_11 = $P_11->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -124,7 +124,7 @@ print($W_11);
 print("\n");
 
 
-my $F_12 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_12 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_12 = new Polytope(POINTS=>$F_12);
 my $W_12 = $P_12->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -134,7 +134,7 @@ print($W_12);
 print("\n");
 
 
-my $F_13 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
+my $F_13 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_13 = new Polytope(POINTS=>$F_13);
 my $W_13 = $P_13->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -154,7 +154,7 @@ print($W_14);
 print("\n");
 
 
-my $F_15 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
+my $F_15 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_15 = new Polytope(POINTS=>$F_15);
 my $W_15 = $P_15->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -164,7 +164,7 @@ print($W_15);
 print("\n");
 
 
-my $F_16 = new Matrix([[1, 2, 0], [1, 1, 0], [1, 0, 1]]);
+my $F_16 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_16 = new Polytope(POINTS=>$F_16);
 my $W_16 = $P_16->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -174,7 +174,7 @@ print($W_16);
 print("\n");
 
 
-my $F_17 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_17 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_17 = new Polytope(POINTS=>$F_17);
 my $W_17 = $P_17->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -184,7 +184,7 @@ print($W_17);
 print("\n");
 
 
-my $F_18 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $F_18 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_18 = new Polytope(POINTS=>$F_18);
 my $W_18 = $P_18->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -204,7 +204,7 @@ print($W_19);
 print("\n");
 
 
-my $F_20 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_20 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_20 = new Polytope(POINTS=>$F_20);
 my $W_20 = $P_20->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -224,7 +224,7 @@ print($W_21);
 print("\n");
 
 
-my $F_22 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_22 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_22 = new Polytope(POINTS=>$F_22);
 my $W_22 = $P_22->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -244,7 +244,7 @@ print($W_23);
 print("\n");
 
 
-my $F_24 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_24 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_24 = new Polytope(POINTS=>$F_24);
 my $W_24 = $P_24->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -254,7 +254,7 @@ print($W_24);
 print("\n");
 
 
-my $F_25 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_25 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_25 = new Polytope(POINTS=>$F_25);
 my $W_25 = $P_25->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -294,7 +294,7 @@ print($W_28);
 print("\n");
 
 
-my $F_29 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_29 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_29 = new Polytope(POINTS=>$F_29);
 my $W_29 = $P_29->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -304,7 +304,7 @@ print($W_29);
 print("\n");
 
 
-my $F_30 = new Matrix([[1, 1, 1], [1, 1, 0], [1, 0, 0]]);
+my $F_30 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_30 = new Polytope(POINTS=>$F_30);
 my $W_30 = $P_30->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -314,7 +314,7 @@ print($W_30);
 print("\n");
 
 
-my $F_31 = new Matrix([[1, 1, 1], [1, 1, 0], [1, 0, 0]]);
+my $F_31 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_31 = new Polytope(POINTS=>$F_31);
 my $W_31 = $P_31->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -322,15 +322,3 @@ print($F_31);
 print("Lattice width: ");
 print($W_31);
 print("\n");
-
-
-my $F_32 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
-my $P_32 = new Polytope(POINTS=>$F_32);
-my $W_32 = $P_32->LATTICE_WIDTH;
-print("\nVertices:\n");
-print($F_32);
-print("Lattice width: ");
-print($W_32);
-print("\n");
-
-

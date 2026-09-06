@@ -3,7 +3,7 @@
 use application "polytope";
 
 
-my $F_0 = new Matrix([[1, 0, 1, 1], [1, 0, 2, 1], [1, 1, 0, 0], [1, 1, 0, 1], [1, 3, 0, 0], [1, 1, 1, 1], [1, 1, 2, 0]]);
+my $F_0 = new Matrix([[1, 1, 0, 3], [1, 2, 0, 1], [1, 1, 1, 1], [1, 1, 0, 2], [1, 0, 1, 2], [1, 1, 1, 0], [1, 0, 2, 0]]);
 my $P_0 = new Polytope(POINTS=>$F_0);
 my $LW_0 = $P_0->LATTICE_WIDTH;
 my $FW_0 = $P_0->FACET_WIDTHS;
@@ -27,7 +27,7 @@ print($R_0);
 print("\n");
 
 
-my $F_1 = new Matrix([[1, 0, 1, 1], [1, 1, 0, 0], [1, 1, 0, 1], [1, 3, 0, 0], [1, 1, 2, 0]]);
+my $F_1 = new Matrix([[1, 0, 2, 2], [1, 4, 0, 0], [1, 3, 0, 0], [1, 2, 0, 2], [1, 2, 2, 0]]);
 my $P_1 = new Polytope(POINTS=>$F_1);
 my $LW_1 = $P_1->LATTICE_WIDTH;
 my $FW_1 = $P_1->FACET_WIDTHS;
@@ -51,7 +51,7 @@ print($R_1);
 print("\n");
 
 
-my $F_2 = new Matrix([[1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $F_2 = new Matrix([[1, 0, 2, 2], [1, 4, 0, 0], [1, 3, 0, 0], [1, 2, 0, 2], [1, 2, 2, 0]]);
 my $P_2 = new Polytope(POINTS=>$F_2);
 my $LW_2 = $P_2->LATTICE_WIDTH;
 my $FW_2 = $P_2->FACET_WIDTHS;
@@ -75,7 +75,7 @@ print($R_2);
 print("\n");
 
 
-my $F_3 = new Matrix([[1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 2], [1, 0, 2, 0]]);
+my $F_3 = new Matrix([[1, 0, 0, 2], [1, 2, 0, 0], [1, 0, 2, 0], [1, 1, 0, 0]]);
 my $P_3 = new Polytope(POINTS=>$F_3);
 my $LW_3 = $P_3->LATTICE_WIDTH;
 my $FW_3 = $P_3->FACET_WIDTHS;
@@ -100,7 +100,7 @@ print($R_3);
 print("\n");
 
 
-my $F_4 = new Matrix([[1, 0, 2, 0], [1, 1, 0, 0], [1, 1, 0, 1], [1, 2, 0, 0]]);
+my $F_4 = new Matrix([[1, 0, 0, 0], [1, 2, 0, 2], [1, 0, 0, 2], [1, 0, 1, 0], [1, 2, 0, 0]]);
 my $P_4 = new Polytope(POINTS=>$F_4);
 my $LW_4 = $P_4->LATTICE_WIDTH;
 my $FW_4 = $P_4->FACET_WIDTHS;
@@ -124,7 +124,7 @@ print($R_4);
 print("\n");
 
 
-my $F_5 = new Matrix([[1, 0, 0, 0], [1, 0, 0, 1], [1, 1, 0, 0], [1, 0, 2, 0]]);
+my $F_5 = new Matrix([[1, 0, 0, 2], [1, 4, 0, 0], [1, 2, 0, 0], [1, 2, 1, 0]]);
 my $P_5 = new Polytope(POINTS=>$F_5);
 my $LW_5 = $P_5->LATTICE_WIDTH;
 my $FW_5 = $P_5->FACET_WIDTHS;
@@ -148,7 +148,7 @@ print($R_5);
 print("\n");
 
 
-my $F_6 = new Matrix([[1, 1, 1, 0], [1, 1, 0, 0], [1, 0, 1, 0], [1, 0, 0, 1], [1, 0, 0, 0]]);
+my $F_6 = new Matrix([[1, 0, 0, 0], [1, 1, 0, 0], [1, 0, 0, 2], [1, 0, 2, 0]]);
 my $P_6 = new Polytope(POINTS=>$F_6);
 my $LW_6 = $P_6->LATTICE_WIDTH;
 my $FW_6 = $P_6->FACET_WIDTHS;
@@ -172,7 +172,7 @@ print($R_6);
 print("\n");
 
 
-my $F_7 = new Matrix([[1, 0, 0, 0], [1, 2, 0, 0], [1, 0, 0, 2], [1, 0, 1, 0], [1, 0, 1, 1]]);
+my $F_7 = new Matrix([[1, 0, 0, 2], [1, 1, 2, 0], [1, 0, 2, 0], [1, 0, 4, 0]]);
 my $P_7 = new Polytope(POINTS=>$F_7);
 my $LW_7 = $P_7->LATTICE_WIDTH;
 my $FW_7 = $P_7->FACET_WIDTHS;

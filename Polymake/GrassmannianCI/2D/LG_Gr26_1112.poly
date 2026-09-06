@@ -1,5 +1,6 @@
 # List of 2d irreducible Minkowski summands
 
+
 use application "polytope";
 
 
@@ -23,7 +24,7 @@ print($W_1);
 print("\n");
 
 
-my $F_2 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_2 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_2 = new Polytope(POINTS=>$F_2);
 my $W_2 = $P_2->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -53,7 +54,7 @@ print($W_4);
 print("\n");
 
 
-my $F_5 = new Matrix([[1, 0, 0], [1, 0, 1], [1, 2, 0]]);
+my $F_5 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_5 = new Polytope(POINTS=>$F_5);
 my $W_5 = $P_5->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -93,7 +94,7 @@ print($W_8);
 print("\n");
 
 
-my $F_9 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
+my $F_9 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
 my $P_9 = new Polytope(POINTS=>$F_9);
 my $W_9 = $P_9->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -123,7 +124,7 @@ print($W_11);
 print("\n");
 
 
-my $F_12 = new Matrix([[1, 1, 1], [1, 0, 1], [1, 0, 0]]);
+my $F_12 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_12 = new Polytope(POINTS=>$F_12);
 my $W_12 = $P_12->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -163,7 +164,7 @@ print($W_15);
 print("\n");
 
 
-my $F_16 = new Matrix([[1, 1, 1], [1, 1, 0], [1, 0, 0]]);
+my $F_16 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_16 = new Polytope(POINTS=>$F_16);
 my $W_16 = $P_16->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -183,7 +184,7 @@ print($W_17);
 print("\n");
 
 
-my $F_18 = new Matrix([[1, 1, 1], [1, 1, 0], [1, 0, 0]]);
+my $F_18 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
 my $P_18 = new Polytope(POINTS=>$F_18);
 my $W_18 = $P_18->LATTICE_WIDTH;
 print("\nVertices:\n");
@@ -220,24 +221,4 @@ print("\nVertices:\n");
 print($F_21);
 print("Lattice width: ");
 print($W_21);
-print("\n");
-
-
-my $F_22 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
-my $P_22 = new Polytope(POINTS=>$F_22);
-my $W_22 = $P_22->LATTICE_WIDTH;
-print("\nVertices:\n");
-print($F_22);
-print("Lattice width: ");
-print($W_22);
-print("\n");
-
-
-my $F_23 = new Matrix([[1, 1, 0], [1, 0, 1], [1, 0, 0]]);
-my $P_23 = new Polytope(POINTS=>$F_23);
-my $W_23 = $P_23->LATTICE_WIDTH;
-print("\nVertices:\n");
-print($F_23);
-print("Lattice width: ");
-print($W_23);
 print("\n");

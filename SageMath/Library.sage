@@ -1219,7 +1219,7 @@ def find_smooth_FRST(laurent_poly, n):
 
             # Remove _red below to look for a general FRS triangulation
             # WARNING: TOPCOM memory consumption is usually huge
-            
+
             pointConf = PointConfiguration(points_red)
             pointConf_restricted = pointConf.\
                 restrict_to_regular_triangulations(regular=True).\
@@ -1338,8 +1338,8 @@ def face_polynomial(laurent_poly, face_dim):
                     new_monom = temp_ring.monomial(*RHS[index])
                     result += new_monom * coeff
             print("Face polynomial in reduced coordinates")
-#            print(factor(result))
-            print(result)
+            print(factor(result))
+#            print(result)
         print("\n")
 
 
@@ -1456,16 +1456,15 @@ def face_minkowski_polytopes(laurent_poly, face_dim, refined):
         return List
 
 
-# Present a Laurent polynomial whose Newton polytope is of lattice width one
-# in the form F(x_0, ..., x_{n - 1}) * x_n + G(x_0, ..., x_{n - 1})
-# (and raise an exception if this fails)
+# Laurent polynomials of lattice width one
 
 def _width_one_exponent_tuple(exponent, n):
     """
-    Normalize an exponent key returned by monomial_coefficients().
+    Returns a normalized exponent tuple.
 
-    SageMath uses an integer key for some univariate Laurent polynomial
-    implementations and a tuple-like key for multivariate implementations.
+    Arguments:
+        exponent : An exponent returned by monomial_coefficients().
+        n : The number of variables.
     """
     if n == 1:
         try:
@@ -1477,11 +1476,16 @@ def _width_one_exponent_tuple(exponent, n):
 
 def _width_one_support_exponents(f):
     """
-    Return the exponent vectors of the nonzero monomials of f.
+    Returns exponent vectors of nonzero monomials of a Laurent polynomial.
 
-    In some SageMath versions f.monomials() method calls
-    monomial_coefficients(copy=...), whereas the Laurent polynomial
-    implementation does not accept the 'copy' keyword.
+    The use of monomial_coefficients() avoids a compatibility problem with
+    f.monomials() in some SageMath versions.
+
+    Arguments:
+        f : A Laurent polynomial.
+
+    Returns:
+        A list of vectors over ZZ.
     """
     n = f.parent().ngens()
     return [
@@ -1492,7 +1496,7 @@ def _width_one_support_exponents(f):
 
 def _canonical_direction_sign(u):
     """
-    Choose one of u and -u: the first nonzero entry is positive.
+    Returns u or -u so that the first nonzero entry is positive.
     """
     for a in u:
         if a > 0:
@@ -1504,22 +1508,17 @@ def _canonical_direction_sign(u):
 
 def lattice_width_one_directions(f):
     """
-    Return all lattice-width-one covectors of Newt(f) modulo sign.
+    Returns lattice-width-one covectors of the Newton polytope modulo sign.
 
     The output consists of primitive vectors u in ZZ^n such that
-    max_{a in supp(f)} <a,u> - min_{a in supp(f)} <a,u> = 1.
-
+    max <a,u> - min <a,u> = 1 for exponents a in the support.
     The Newton polytope is required to be full-dimensional.
 
-    Algorithm:
-        For P = Newt(f), put D = P-P. Then width_P(u) = h_D(u),
-        where h_D is the support function. 
+    Arguments:
+        f : A nonzero Laurent polynomial.
 
-        Hence the integral covectors of width at most one are exactly the
-        lattice points of the bounded rational polytope
-        D^* = {u : <p-q,u> <= 1 for all vertices p,q of P}.
-
-        We enumerate these lattice points and discard zero.
+    Returns:
+        A list of primitive vectors over ZZ.
 
     Example:
         sage: R.<x,y,z> = LaurentPolynomialRing(QQ)
@@ -1545,9 +1544,9 @@ def lattice_width_one_directions(f):
 
     vertices = [vector(ZZ, v) for v in P.vertices_list()]
 
-    # Sage inequalities have the form b + a_1*u_1 + ... + a_n*u_n >= 0.
-    # For every unordered pair p,q we impose both
-    #     1 - <p-q,u> >= 0  and  1 + <p-q,u> >= 0.
+    # Inequalities for the polar of the difference body
+    # For every unordered pair p,q impose both
+    #     1 - <p-q,u> >= 0  and  1 + <p-q,u> >= 0
     ieqs = []
     for i in range(len(vertices)):
         for j in range(i + 1, len(vertices)):
@@ -1584,11 +1583,13 @@ def lattice_width_one_directions(f):
 
 def _unimodular_matrix_with_last_column(u):
     """
-    Complete a primitive vector u to a matrix in GL(n,ZZ),
-    with u as its last column.
+    Returns a matrix in GL(n, ZZ) with a given primitive last column.
 
-    This uses elementary extended-gcd row operations, so it does not
-    depend on optional normal-form packages.
+    Arguments:
+        u : A primitive vector over ZZ.
+
+    Returns:
+        A matrix in GL(n, ZZ) whose last column is u.
     """
     u = vector(ZZ, u)
     n = len(u)
@@ -1598,7 +1599,7 @@ def _unimodular_matrix_with_last_column(u):
     if gcd(list(u)) not in (ZZ(1), ZZ(-1)):
         raise ValueError("The direction vector must be primitive.")
 
-    # Construct U in GL(n,ZZ) with U*u = e_1.
+    # Construct U in GL(n, ZZ) with U*u = e_1
     U = identity_matrix(ZZ, n)
     v = vector(ZZ, u)
 
@@ -1627,8 +1628,8 @@ def _unimodular_matrix_with_last_column(u):
     if v != vector(ZZ, [1] + [0]*(n - 1)):
         raise ArithmeticError("Failed to complete the primitive vector.")
 
-    # C = U^{-1} has u as its first column. We cyclically move that column
-    # to the end. The resulting M is still unimodular.
+    # Move the first column of U^{-1} to the end
+    # to obtain a unimodular matrix with last column u
     C = matrix(ZZ, U.inverse())
     M = matrix(
         ZZ, n, n,
@@ -1643,7 +1644,11 @@ def _unimodular_matrix_with_last_column(u):
 
 def _validate_width_direction(support, u):
     """
-    Validate a custom primitive width-one covector.
+    Returns a primitive width-one covector with normalized sign.
+
+    Arguments:
+        support : A list of exponent vectors.
+        u : A primitive covector.
     """
     u = vector(ZZ, u)
     if len(u) != len(support[0]):
@@ -1659,7 +1664,9 @@ def _validate_width_direction(support, u):
 
 def _split_linear_last_variable(h):
     """
-    Given h whose last exponents are 0 and 1, return F,G with h = F * x_n + G.
+    Returns F and G for h = F*x_n + G.
+
+    The exponents of h in x_n are assumed to be 0 and 1.
     """
     R = h.parent()
     n = R.ngens()
@@ -1687,7 +1694,7 @@ def _split_linear_last_variable(h):
     if h != F*x_n + G:
         raise ArithmeticError("Failed to split the normalized polynomial.")
 
-    # Explicitly verify that F and G do not involve x_n.
+    # Check that F and G do not involve x_n
     for coefficient_part in (F, G):
         for exponent in _width_one_support_exponents(coefficient_part):
             if exponent[-1] != 0:
@@ -1698,33 +1705,24 @@ def _split_linear_last_variable(h):
 
 def linearize_width_one(f, direction=None):
     """
-    Transform a Laurent polynomial of lattice width one into
+    Presents a Laurent polynomial of lattice width one in the form
     F(x_1,...,x_{n-1})*x_n + G(x_1,...,x_{n-1}).
 
     Arguments:
-        f : a nonzero Laurent polynomial with full-dimensional
-            lattice-width-one Newton polytope.
-        direction : optional primitive width-one covector.
-                    If omitted, one is found automatically.
+        f : A nonzero Laurent polynomial with full-dimensional Newton polytope
+            of lattice width one.
+        direction : A primitive width-one covector. If omitted, one is found
+            automatically.
 
     Returns:
         A dictionary with keys:
-        - polynomial : the normalized polynomial F*x_n + G;
-        - F, G : Laurent polynomials independent of x_n;
-        - raw_GL_image : GL_action(f, M);
-        - matrix : M in GL(n,ZZ), whose last column is the width covector;
-        - width_direction : the primitive covector u;
-        - minimum_level : m = min <a,u>;
-        - laurent_unit : x_n^(-m), so that
-          polynomial = laurent_unit * raw_GL_image.
-
-    Conventions:
-        GL_action(f,M) sends an exponent row vector a to a*M. Therefore its
-        last coordinate is <a,u> when the last column of M is u.
-
-        A GL(n,ZZ) substitution alone gives last exponents {m,m+1}. Multiplying
-        by the Laurent unit x_n^(-m) translates them to {0,1}. Multiplication
-        by a nonzero Laurent monomial does not change the toric hypersurface.
+        - polynomial : the normalized polynomial F*x_n + G
+        - F, G : Laurent polynomials independent of x_n
+        - raw_GL_image : GL_action(f, M)
+        - matrix : the matrix M in GL(n, ZZ)
+        - width_direction : the primitive width covector
+        - minimum_level : min <a,u>
+        - laurent_unit : the Laurent monomial used for normalization
 
     Example:
         sage: R.<X_1, X_2, X_3> = LaurentPolynomialRing(QQ)
@@ -1748,7 +1746,7 @@ def linearize_width_one(f, direction=None):
     if direction is None:
         u = lattice_width_one_directions(f)[0]
     else:
-        # Also performs the ambient-dimension check through the polytope.
+        # Check the ambient dimension
         P = Polyhedron(vertices=[list(a) for a in support], base_ring=QQ)
         if P.dim() != n:
             raise ValueError(
@@ -1772,11 +1770,11 @@ def linearize_width_one(f, direction=None):
     x_n = R.gen(n - 1)
     laurent_unit = x_n**(-minimum_level)
 
-    # GL_action constructs a formal Laurent ring from the generators.  For
-    # one generator Sage may switch between its univariate and one-variable
-    # multivariate Laurent implementations, which need not coerce negative
-    # valuations directly into one another.  Perform the shift in raw's own
-    # parent, then convert the normalized (nonnegative in x_n) result to R.
+    # Normalize in the parent ring of GL_action
+    # to avoid coercion problems for one-variable Laurent rings
+
+
+
     raw_x_n = raw.parent().gen(n - 1)
     normalized = R(raw_x_n**(-minimum_level) * raw)
     F, G = _split_linear_last_variable(normalized)
@@ -1791,3 +1789,1050 @@ def linearize_width_one(f, direction=None):
         "minimum_level": minimum_level,
         "laurent_unit": laurent_unit,
     }
+
+
+# Weak, nested and transverse non-degeneracy
+# Weak non-degeneracy is relaxed in comparison with arXiv:2307.15607
+
+def _primitive_integer_vector(v):
+    """
+    Returns the primitive integral generator of a rational ray.
+
+    Arguments:
+        v : A nonzero vector over ZZ or QQ.
+
+    Returns:
+        A primitive vector over ZZ with the same orientation.
+
+    Example:
+        sage: _primitive_integer_vector(vector(QQ, [2/3, 4/3]))
+        (1, 2)
+    """
+    v = vector(QQ, v)
+    if all(a == 0 for a in v):
+        raise ValueError("The zero vector does not span a ray.")
+
+    denominator = lcm([a.denominator() for a in v])
+    w = vector(ZZ, [ZZ(denominator*a) for a in v])
+    common_divisor = gcd(list(w))
+    if common_divisor < 0:
+        common_divisor = -common_divisor
+    return vector(ZZ, [a // common_divisor for a in w])
+
+
+def _face_reduced_data(laurent_poly, face):
+    """
+    Computes a face polynomial in the saturated face lattice coordinates.
+
+    Arguments:
+        laurent_poly : A Laurent polynomial over QQ.
+        face : A positive-dimensional face of its Newton polytope.
+
+    Returns:
+        A dictionary with keys:
+        - polynomial : the face polynomial in reduced coordinates up to a
+          Laurent monomial
+        - polyhedron : the face in reduced lattice coordinates
+        - lattice_basis : a basis matrix of the saturated lattice parallel
+          to the face
+        - shift : the lattice point chosen as the origin
+    """
+    poly_parent = laurent_poly.parent()
+    if not isinstance(poly_parent, LaurentPolynomialRing_generic):
+        raise TypeError("The first argument should be a Laurent polynomial.")
+
+    vertices = [vector(ZZ, v) for v in face.vertices()]
+    if len(vertices) == 0:
+        raise ValueError("The face should be nonempty.")
+
+    shift = vertices[0]
+    differences = matrix(ZZ, [list(v - shift) for v in vertices])
+    lattice_basis = differences.saturation()
+    face_dim = lattice_basis.rank()
+
+    if face_dim < 1:
+        raise ValueError("The face should be positive-dimensional.")
+
+    # Remove zero rows
+    lattice_basis = matrix(
+        ZZ, [list(row) for row in lattice_basis.rows()
+             if any(a != 0 for a in row)])
+
+    if lattice_basis.nrows() != face_dim:
+        raise ArithmeticError("Failed to compute the saturated face lattice.")
+
+    name_list = ['X_' + str(i) for i in range(face_dim)]
+    temp_ring = LaurentPolynomialRing(names=name_list, base_ring=QQ)
+
+    def reduced_coordinates(point):
+        """
+        Returns coordinates in the saturated face lattice basis.
+        """
+        difference = vector(QQ, vector(ZZ, point) - shift)
+        coordinates = matrix(QQ, lattice_basis.transpose()).solve_right(
+            difference)
+        if any(a.denominator() != 1 for a in coordinates):
+            raise ArithmeticError(
+                "A face lattice point has non-integral reduced coordinates.")
+        return vector(ZZ, [ZZ(a) for a in coordinates])
+
+    reduced_vertices = [reduced_coordinates(v) for v in vertices]
+    face_polyhedron = Polyhedron(vertices=reduced_vertices, base_ring=QQ)
+    ambient_face_polyhedron = Polyhedron(vertices=vertices, base_ring=QQ)
+
+    result = temp_ring.zero()
+    n = poly_parent.ngens()
+    for exponent, coefficient in laurent_poly.monomial_coefficients().items():
+        exponent = _width_one_exponent_tuple(exponent, n)
+        point = vector(ZZ, exponent)
+        if not ambient_face_polyhedron.contains(point):
+            continue
+        coordinates = reduced_coordinates(point)
+        result += QQ(coefficient) * temp_ring.monomial(*list(coordinates))
+
+    if result.is_zero():
+        raise ArithmeticError("Failed to construct the face polynomial.")
+
+    return {
+        "polynomial": result,
+        "polyhedron": face_polyhedron,
+        "lattice_basis": lattice_basis,
+        "shift": shift,
+    }
+
+
+def _relative_normal_rays(face_polyhedron, subface):
+    """
+    Computes primitive rays of a relative normal cone.
+
+    Arguments:
+        face_polyhedron : A full-dimensional lattice polyhedron.
+        subface : A proper face of face_polyhedron.
+
+    Returns:
+        A list of primitive vectors over ZZ generating the relative normal cone.
+    """
+    rays = []
+    subface_vertices = list(subface.vertices())
+
+    for inequality in face_polyhedron.inequality_generator():
+        if all(inequality.eval(v) == 0 for v in subface_vertices):
+            ray = _primitive_integer_vector(inequality.A())
+            if ray not in rays:
+                rays.append(ray)
+
+    return rays
+
+
+def _relative_normal_cone_data(face_polyhedron, subface):
+    """
+    Computes lattice data of a relative normal cone.
+
+    Arguments:
+        face_polyhedron : A full-dimensional lattice polyhedron.
+        subface : A proper face of face_polyhedron.
+
+    Returns:
+        A dictionary with keys:
+        - dimension : the dimension of the relative normal cone
+        - rays : its primitive ray generators
+        - simplicial : whether the cone is simplicial
+        - lattice_index : the index of the ray lattice in its saturation
+        - unimodular : whether the cone is unimodular
+    """
+    relative_dim = face_polyhedron.dim() - subface.dim()
+    rays = _relative_normal_rays(face_polyhedron, subface)
+
+    if len(rays) == 0:
+        raise ArithmeticError("Failed to compute the relative normal cone.")
+
+    ray_matrix = matrix(ZZ, [list(v) for v in rays])
+    simplicial = (len(rays) == relative_dim and
+                  ray_matrix.rank() == relative_dim)
+
+    if simplicial:
+        lattice_index = ZZ(ray_matrix.index_in_saturation())
+    else:
+        lattice_index = None
+
+    return {
+        "dimension": relative_dim,
+        "rays": rays,
+        "simplicial": simplicial,
+        "lattice_index": lattice_index,
+        "unimodular": simplicial and lattice_index == 1,
+    }
+
+
+def _unimodular_normal_matrix(rays, ambient_dim):
+    """
+    Completes generators of a unimodular cone to a lattice basis.
+
+    Arguments:
+        rays : Linearly independent primitive generators of a unimodular cone.
+        ambient_dim : The rank of the ambient lattice.
+
+    Returns:
+        A matrix in GL(ambient_dim, ZZ) whose first len(rays) rows are rays.
+
+    Example:
+        sage: rays = [vector(ZZ, [1, 0]), vector(ZZ, [0, 1])]
+        sage: _unimodular_normal_matrix(rays, 2)
+        [1 0]
+        [0 1]
+    """
+    ray_matrix = matrix(ZZ, [list(v) for v in rays])
+    c = ray_matrix.nrows()
+
+    if ray_matrix.ncols() != ambient_dim:
+        raise ValueError("The normal rays have the wrong ambient dimension.")
+    if c > ambient_dim or ray_matrix.rank() != c:
+        raise ValueError("The normal rays should be linearly independent.")
+    if ray_matrix.index_in_saturation() != 1:
+        raise ValueError("The relative normal cone is not unimodular.")
+
+    # Complete the primitive ray lattice to a basis
+    # by Hermite reduction
+    # U*ray_matrix^t = [I_c; 0]
+    hermite, transformation = ray_matrix.transpose().hermite_form(
+        transformation=True, include_zero_rows=True)
+    expected = zero_matrix(ZZ, ambient_dim, c)
+    for i in range(c):
+        expected[i, i] = 1
+
+    if hermite != expected:
+        raise ArithmeticError("Failed to reduce a unimodular normal cone.")
+
+    completion = matrix(ZZ, transformation.inverse()).transpose()
+
+    if abs(completion.det()) != 1:
+        raise ArithmeticError("Failed to construct unimodular coordinates.")
+    if completion[:c, :] != ray_matrix:
+        raise ArithmeticError("Normal rays were not preserved by completion.")
+
+    return completion
+
+
+def _polynomial_in_normal_chart(laurent_poly, normal_matrix, normal_dim,
+                                poly_ring):
+    """
+    Computes the extension of a Laurent polynomial to a toric normal chart.
+
+    Arguments:
+        laurent_poly : A Laurent polynomial in d variables over QQ.
+        normal_matrix : A matrix in GL(d, ZZ) defining the chart coordinates.
+        normal_dim : The number of normal coordinates.
+        poly_ring : A polynomial ring over QQ in d variables.
+
+    Returns:
+        A polynomial defining the same reduced hypersurface in
+        A^c x (G_m)^(d-c) up to multiplication by a torus unit.
+    """
+    d = laurent_poly.parent().ngens()
+    if normal_matrix.nrows() != d or normal_matrix.ncols() != d:
+        raise ValueError("Incorrect normal-coordinate matrix.")
+    if poly_ring.ngens() != d:
+        raise ValueError("Incorrect polynomial ring.")
+    if normal_dim not in range(d + 1):
+        raise ValueError("Incorrect number of normal variables.")
+
+    transformed_terms = []
+    for exponent, coefficient in laurent_poly.monomial_coefficients().items():
+        exponent = _width_one_exponent_tuple(exponent, d)
+        transformed_exponent = normal_matrix * vector(ZZ, exponent)
+        transformed_terms.append((transformed_exponent, QQ(coefficient)))
+
+    coordinate_minima = []
+    for j in range(d):
+        coordinate_minima.append(
+            min(exponent[j] for exponent, _ in transformed_terms))
+
+    result = poly_ring.zero()
+    for exponent, coefficient in transformed_terms:
+        shifted = [ZZ(exponent[j] - coordinate_minima[j])
+                   for j in range(d)]
+        result += coefficient * poly_ring.monomial(*shifted)
+
+    return result
+
+
+def _saturate_by_variables(input_ideal, variables):
+    """
+    Saturates an ideal by a collection of coordinate variables.
+
+    Arguments:
+        input_ideal : An ideal in a polynomial ring.
+        variables : A list of generators of the same polynomial ring.
+
+    Returns:
+        The saturation of input_ideal by the product of variables.
+    """
+    if len(variables) == 0:
+        return input_ideal
+
+    multiple = input_ideal.ring().one()
+    for variable in variables:
+        multiple *= variable
+    return input_ideal.saturation(input_ideal.ring().ideal(multiple))[0]
+
+
+def _ideal_is_unit(input_ideal):
+    """
+    Tests whether an ideal is the unit ideal.
+
+    Arguments:
+        input_ideal : An ideal in a polynomial ring.
+
+    Returns:
+        A boolean.
+    """
+    return input_ideal.ring().one() in input_ideal
+
+
+def _irreducible_component_smooth_along_stratum(
+        component, normal_variables, torus_variables,
+        component_is_torus_saturated=False):
+    """
+    Tests smoothness of an irreducible component along a toric stratum.
+
+    Arguments:
+        component : A prime ideal in a polynomial ring over QQ.
+        normal_variables : Coordinate variables vanishing on the stratum.
+        torus_variables : Invertible coordinate variables of the chart.
+        component_is_torus_saturated : A boolean.
+
+    Returns:
+        A boolean.
+    """
+    if not component_is_torus_saturated:
+        component = _saturate_by_variables(component, torus_variables)
+        if _ideal_is_unit(component):
+            return True
+
+    poly_ring = component.ring()
+    ambient_dim = poly_ring.ngens()
+    codimension = ambient_dim - component.dimension()
+
+    jacobian_list = []
+    for poly in component.gens():
+        gradient = [poly.derivative(g) for g in poly_ring.gens()]
+        jacobian_list.append(gradient)
+    jacobian_matrix = matrix(poly_ring, jacobian_list)
+
+    singular_list = list(component.gens()) + list(normal_variables)
+    if codimension > 0:
+        singular_list += jacobian_matrix.minors(codimension)
+
+    singular_ideal = poly_ring.ideal(singular_list)
+    singular_ideal = _saturate_by_variables(
+        singular_ideal, torus_variables)
+    return _ideal_is_unit(singular_ideal)
+
+
+def _component_collection_smooth_along_stratum(
+        polynomial_list, normal_dim, prime_chart_seeds=False,
+        require_transversality=False):
+    """
+    Tests componentwise smoothness along a toric stratum.
+
+    The collection starts with the irreducible factor hypersurfaces and is
+    closed under reduced intersections and irreducible decomposition. If
+    require_transversality is True, conormals of all factor branches containing
+    a component are also required to be linearly independent along it.
+
+    Arguments:
+        polynomial_list : A nonempty list of polynomials in one polynomial ring
+            over QQ.
+        normal_dim : The number of normal coordinates.
+        prime_chart_seeds : A boolean.
+        require_transversality : A boolean.
+
+    Returns:
+        A triple (smooth, reason, witness).
+    """
+    if len(polynomial_list) == 0:
+        raise ValueError("At least one polynomial is required.")
+
+    poly_ring = polynomial_list[0].parent()
+    ambient_dim = poly_ring.ngens()
+    if normal_dim not in range(ambient_dim + 1):
+        raise ValueError("Incorrect number of normal variables.")
+
+    normal_variables = list(poly_ring.gens()[:normal_dim])
+    torus_variables = list(poly_ring.gens()[normal_dim:])
+
+    if not isinstance(require_transversality, bool):
+        raise TypeError("require_transversality should be a Boolean.")
+
+    # Gradients of the reduced factor branches
+
+    rank_variables = list(poly_ring.gens())
+    factor_gradient_rows = [
+        [g.derivative(variable) for variable in rank_variables]
+        for g in polynomial_list
+    ]
+
+    components = []
+    factor_supports = []
+    first_crossing_witness = [None]
+
+    def crossing_failure(component):
+        """
+        Returns a transversality failure record or None.
+        """
+        if not require_transversality:
+            return None
+
+        # Skip components disjoint from the toric stratum
+        incidence_ideal = poly_ring.ideal(
+            list(component.gens()) + normal_variables)
+        incidence_ideal = _saturate_by_variables(
+            incidence_ideal, torus_variables)
+        if _ideal_is_unit(incidence_ideal):
+            return None
+
+        # Factor branches containing the component
+        incident_factors = [
+            factor_number
+            for factor_number in range(len(polynomial_list))
+            if polynomial_list[factor_number] in component
+        ]
+        required_rank = len(incident_factors)
+        if required_rank == 0:
+            return None
+
+        if required_rank > len(rank_variables):
+            return {
+                "component_generators": list(component.gens()),
+                "factor_subset": incident_factors,
+                "rank_variables": rank_variables,
+                "reason": "too many reduced branches meet along the stratum",
+            }
+
+        jacobian_matrix = matrix(
+            poly_ring,
+            [factor_gradient_rows[i] for i in incident_factors])
+        rank_drop_ideal = poly_ring.ideal(
+            list(component.gens()) + normal_variables +
+            jacobian_matrix.minors(required_rank))
+        rank_drop_ideal = _saturate_by_variables(
+            rank_drop_ideal, torus_variables)
+
+        if _ideal_is_unit(rank_drop_ideal):
+            return None
+
+        reason = (
+            "dependent reduced branch conormals along an iterated "
+            "reduced intersection")
+        return {
+            "component_generators": list(component.gens()),
+            "factor_subset": incident_factors,
+            "rank_variables": rank_variables,
+            "reason": reason,
+        }
+
+    def add_component(component, support):
+        """
+        Adds an irreducible component if it is new.
+        """
+        if not prime_chart_seeds:
+            component = _saturate_by_variables(component, torus_variables)
+            if _ideal_is_unit(component):
+                return (True, None)
+
+        support = frozenset(support)
+        for known_number in range(len(components)):
+            if component == components[known_number]:
+                # Keep the smallest known factor support
+                if len(support) < len(factor_supports[known_number]):
+                    factor_supports[known_number] = support
+                return (True, known_number)
+
+        if not _irreducible_component_smooth_along_stratum(
+                component, normal_variables, torus_variables,
+                component_is_torus_saturated=prime_chart_seeds):
+            return (
+                False,
+                {
+                    "component_generators": list(component.gens()),
+                    "factor_subset": sorted(support),
+                    "reason": (
+                        "singular irreducible component of an iterated "
+                        "reduced intersection"),
+                },
+            )
+
+        crossing_witness = crossing_failure(component)
+        if (crossing_witness is not None and
+                first_crossing_witness[0] is None):
+            # Record the first rank failure
+            first_crossing_witness[0] = crossing_witness
+
+        components.append(component)
+        factor_supports.append(support)
+        return (True, len(components) - 1)
+
+    # Irreducible components of factor closures
+    for factor_number in range(len(polynomial_list)):
+        input_ideal = poly_ring.ideal([polynomial_list[factor_number]])
+
+        if prime_chart_seeds:
+            # Prime torus-saturated factor ideals
+
+            seed_components = [input_ideal]
+        else:
+            input_ideal = _saturate_by_variables(
+                input_ideal, torus_variables)
+            input_ideal = input_ideal.radical()
+
+            if _ideal_is_unit(input_ideal):
+                continue
+
+            seed_components = input_ideal.minimal_associated_primes()
+
+        for component in seed_components:
+            added, witness = add_component(component, [factor_number])
+            if not added:
+                return (False, witness["reason"], witness)
+
+    # Reduced intersections
+    component_number = 0
+    while component_number < len(components):
+        for other_number in range(component_number):
+            intersection_ideal = poly_ring.ideal(
+                list(components[component_number].gens()) +
+                list(components[other_number].gens()))
+            intersection_ideal = _saturate_by_variables(
+                intersection_ideal, torus_variables)
+            if not prime_chart_seeds:
+                intersection_ideal = intersection_ideal.radical()
+
+            if _ideal_is_unit(intersection_ideal):
+                continue
+
+            support = (factor_supports[component_number] |
+                       factor_supports[other_number])
+            for component in intersection_ideal.minimal_associated_primes():
+                added, witness = add_component(component, support)
+                if not added:
+                    return (False, witness["reason"], witness)
+
+        component_number += 1
+
+    if first_crossing_witness[0] is not None:
+        witness = first_crossing_witness[0]
+        return (False, witness["reason"], witness)
+
+    return (True, None, None)
+
+
+def _face_factor_list(face_polynomial):
+    """
+    Returns distinct nonconstant irreducible factors of a face polynomial.
+
+    Arguments:
+        face_polynomial : A polynomial or Laurent polynomial over QQ.
+
+    Returns:
+        A list of irreducible factors without multiplicities.
+    """
+    output = []
+    for factor_poly, _ in factor(face_polynomial):
+        if factor_poly.is_constant():
+            continue
+        output.append(factor_poly)
+    return output
+
+
+def _factor_intersections_smooth_in_torus(
+        factor_list, require_transversality=False):
+    """
+    Tests componentwise smoothness of Laurent factors in a face torus.
+
+    Arguments:
+        factor_list : A list of Laurent polynomials over QQ.
+        require_transversality : A boolean.
+
+    Returns:
+        A triple (smooth, subset, reason).
+    """
+    if len(factor_list) == 0:
+        return (True, None, None)
+
+    d = factor_list[0].parent().ngens()
+    name_list = ['Y_' + str(i) for i in range(d)]
+    poly_ring = PolynomialRing(QQ, len(name_list), names=name_list)
+    identity = identity_matrix(ZZ, d)
+    chart_factors = [_polynomial_in_normal_chart(
+        g, identity, 0, poly_ring) for g in factor_list]
+
+    smooth, reason, witness = \
+        _component_collection_smooth_along_stratum(
+            chart_factors, 0, prime_chart_seeds=True,
+            require_transversality=require_transversality)
+    if smooth:
+        return (True, None, None)
+
+    return (False, witness["factor_subset"], reason)
+
+
+def _validate_nondegeneracy_input(laurent_poly, verbose):
+    """
+    Checks input for non-degeneracy computations.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean.
+
+    Returns:
+        A pair (newton, ambient_dim).
+    """
+    poly_parent = laurent_poly.parent()
+    if not isinstance(poly_parent, LaurentPolynomialRing_generic):
+        raise TypeError("The first argument should be a Laurent polynomial.")
+    if not isinstance(verbose, bool):
+        raise TypeError("The second argument should be a Boolean.")
+    if laurent_poly.is_zero():
+        raise ValueError("The Laurent polynomial should be nonzero.")
+    if poly_parent.base_ring() is not QQ:
+        raise ValueError("The Laurent polynomial should be defined over QQ.")
+
+    newton = newton_polytope(laurent_poly)
+    ambient_dim = newton.dim()
+    if ambient_dim != poly_parent.ngens():
+        raise ValueError("The Newton polytope should be full-dimensional.")
+
+    return (newton, ambient_dim)
+
+
+def _weak_nondegeneracy_data(laurent_poly, newton, ambient_dim,
+                              verbose=False, require_transversality=False):
+    """
+    Computes weak non-degeneracy data for proper faces.
+
+    Arguments:
+        laurent_poly : A Laurent polynomial over QQ.
+        newton : Its full-dimensional Newton polytope.
+        ambient_dim : The dimension of newton.
+        verbose : A boolean.
+        require_transversality : A boolean.
+
+    Returns:
+        A triple (output, faces_by_dimension, face_data_cache).
+    """
+    failures = []
+    weak_ok = True
+    transverse_ok = True
+    faces_by_dimension = {
+        face_dim: newton.faces(face_dim)
+        for face_dim in range(1, ambient_dim)
+    }
+
+    # Proper faces only; one-dimensional reduced divisors are smooth
+
+    face_data_cache = {}
+    for face_dim in range(1, ambient_dim):
+        faces = faces_by_dimension[face_dim]
+        for face_number in range(len(faces)):
+            face = faces[face_number]
+            data = _face_reduced_data(laurent_poly, face)
+            factors = _face_factor_list(data["polynomial"])
+            data["factors"] = factors
+            face_data_cache[(face_dim, face_number)] = data
+
+            if face_dim >= 2:
+                smooth, subset, reason = _factor_intersections_smooth_in_torus(
+                    factors,
+                    require_transversality=require_transversality)
+                if not smooth:
+                    is_crossing_failure = (
+                        require_transversality and not reason.startswith(
+                            "singular irreducible component"))
+                    if is_crossing_failure:
+                        transverse_ok = False
+                        failure_type = "crossing transversality"
+                    else:
+                        weak_ok = False
+                        failure_type = "weak non-degeneracy"
+                    failure = {
+                        "type": failure_type,
+                        "face_dimension": face_dim,
+                        "face_number": face_number,
+                        "factor_subset": subset,
+                        "reason": reason,
+                    }
+                    failures.append(failure)
+                    if verbose:
+                        print(failure)
+
+    output = {
+        "result": weak_ok and (transverse_ok if require_transversality
+                                else True),
+        "failures": failures,
+    }
+    # Separate status flags for the transversality check
+    if require_transversality:
+        output["smooth_result"] = weak_ok
+        output["transverse_result"] = transverse_ok
+    return (output, faces_by_dimension, face_data_cache)
+
+
+def weak_nondegeneracy(laurent_poly, verbose=False):
+    """
+    Checks weak non-degeneracy of a Laurent polynomial.
+
+    For every positive-dimensional proper face the reduced face factors and all
+    irreducible components of their reduced intersections are required to be
+    smooth in the corresponding algebraic torus.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean. If True, detected failures are printed.
+
+    Returns:
+        A dictionary with keys:
+        - result : a boolean
+        - failures : a list of failure records
+
+    Example:
+        sage: R.<x,y> = LaurentPolynomialRing(QQ)
+        sage: F = x + y + x^-1*y^-1
+        sage: weak_nondegeneracy(F)["result"]
+        True
+    """
+    newton, ambient_dim = _validate_nondegeneracy_input(
+        laurent_poly, verbose)
+    output, _, _ = _weak_nondegeneracy_data(
+        laurent_poly, newton, ambient_dim, verbose)
+    return output
+
+
+def is_weakly_nondegenerate(laurent_poly, verbose=False):
+    """
+    Returns whether a Laurent polynomial is weakly non-degenerate.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean.
+
+    Returns:
+        A boolean.
+
+    Example:
+        sage: R.<x,y> = LaurentPolynomialRing(QQ)
+        sage: F = x + y + x^-1*y^-1
+        sage: is_weakly_nondegenerate(F)
+        True
+    """
+    return weak_nondegeneracy(laurent_poly, verbose)["result"]
+
+
+def nested_nondegeneracy(laurent_poly, verbose=False):
+    """
+    Checks nested non-degeneracy of a Laurent polynomial.
+
+    In addition to weak non-degeneracy, for every positive-dimensional proper
+    subface tau of a proper face delta the relative normal cone N_{tau/delta} is
+    required to be unimodular. The irreducible components of reduced
+    intersections of face factors are required to be smooth along the
+    corresponding toric stratum.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean. If True, detected failures are printed.
+
+    Returns:
+        A dictionary with keys:
+        - result : a boolean
+        - weak_nondegenerate : a boolean
+        - relative_unimodular : a boolean
+        - nested_substrata : a boolean
+        - failures : a list of failure records
+
+    Example:
+        sage: R.<x,y> = LaurentPolynomialRing(QQ)
+        sage: F = x + y + x^-1*y^-1
+        sage: nested_nondegeneracy(F)["result"]
+        True
+    """
+    newton, ambient_dim = _validate_nondegeneracy_input(
+        laurent_poly, verbose)
+    weak_output, faces_by_dimension, face_data_cache = \
+        _weak_nondegeneracy_data(
+            laurent_poly, newton, ambient_dim, verbose)
+
+    failures = list(weak_output["failures"])
+    weak_ok = weak_output["result"]
+    unimodular_ok = True
+    nested_ok = True
+
+    # Nested faces of dimension at least two
+    for face_dim in range(2, ambient_dim):
+        faces = faces_by_dimension[face_dim]
+        for face_number in range(len(faces)):
+            data = face_data_cache[(face_dim, face_number)]
+            face_polyhedron = data["polyhedron"]
+            factors = data["factors"]
+
+            for subface_dim in range(1, face_dim):
+                subfaces = face_polyhedron.faces(subface_dim)
+                for subface_number in range(len(subfaces)):
+                    subface = subfaces[subface_number]
+                    cone_data = _relative_normal_cone_data(
+                        face_polyhedron, subface)
+
+                    if not cone_data["unimodular"]:
+                        unimodular_ok = False
+                        failure = {
+                            "type": "relative unimodularity",
+                            "face_dimension": face_dim,
+                            "face_number": face_number,
+                            "face_vertices": list(face_polyhedron.vertices()),
+                            "subface_dimension": subface_dim,
+                            "subface_number": subface_number,
+                            "subface_vertices": list(subface.vertices()),
+                            "rays": cone_data["rays"],
+                            "simplicial": cone_data["simplicial"],
+                            "lattice_index": cone_data["lattice_index"],
+                        }
+                        failures.append(failure)
+                        if verbose:
+                            print(failure)
+                        # No unimodular normal coordinates
+                        continue
+
+                    normal_dim = cone_data["dimension"]
+                    normal_matrix = _unimodular_normal_matrix(
+                        cone_data["rays"], face_dim)
+                    name_list = (['z_' + str(i) for i in range(normal_dim)] +
+                                 ['y_' + str(i)
+                                  for i in range(face_dim - normal_dim)])
+                    chart_ring = PolynomialRing(
+                        QQ, len(name_list), names=name_list)
+                    chart_factors = [_polynomial_in_normal_chart(
+                        g, normal_matrix, normal_dim, chart_ring)
+                        for g in factors]
+
+                    if len(chart_factors) > 0:
+                        smooth, reason, witness = \
+                            _component_collection_smooth_along_stratum(
+                                chart_factors, normal_dim,
+                                prime_chart_seeds=True)
+                        if not smooth:
+                            nested_ok = False
+                            failure = {
+                                "type": "nested substratum",
+                                "face_dimension": face_dim,
+                                "face_number": face_number,
+                                "face_vertices": list(
+                                    face_polyhedron.vertices()),
+                                "subface_dimension": subface_dim,
+                                "subface_number": subface_number,
+                                "subface_vertices": list(
+                                    subface.vertices()),
+                                "factor_subset": witness["factor_subset"],
+                                "normal_rays": cone_data["rays"],
+                                "chart_equations": chart_factors,
+                                "component_generators": witness[
+                                    "component_generators"],
+                                "reason": reason,
+                            }
+                            failures.append(failure)
+                            if verbose:
+                                print(failure)
+
+    return {
+        "result": weak_ok and unimodular_ok and nested_ok,
+        "weak_nondegenerate": weak_ok,
+        "relative_unimodular": unimodular_ok,
+        "nested_substrata": nested_ok,
+        "failures": failures,
+    }
+
+
+def is_nested_nondegenerate(laurent_poly, verbose=False):
+    """
+    Returns whether a Laurent polynomial is nested non-degenerate.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean.
+
+    Returns:
+        A boolean.
+
+    Example:
+        sage: R.<x,y> = LaurentPolynomialRing(QQ)
+        sage: F = x + y + x^-1*y^-1
+        sage: is_nested_nondegenerate(F)
+        True
+    """
+    return nested_nondegeneracy(laurent_poly, verbose)["result"]
+
+
+def transverse_nondegeneracy(laurent_poly, verbose=False):
+    """
+    Checks transverse non-degeneracy of a Laurent polynomial.
+
+    In addition to nested non-degeneracy, the conormals of all reduced factor
+    branches containing an intersection component are required to be linearly
+    independent along this component. Toric boundary divisors are not included
+    among the factor branches.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean. If True, detected failures are printed.
+
+    Returns:
+        A dictionary with keys:
+        - result : a boolean
+        - nested_nondegenerate : a boolean
+        - weak_nondegenerate : a boolean
+        - relative_unimodular : a boolean
+        - nested_substrata : a boolean
+        - crossing_transverse : a boolean
+        - failures : a list of failure records
+
+    Example:
+        sage: R.<x,y> = LaurentPolynomialRing(QQ)
+        sage: F = x + y + x^-1*y^-1
+        sage: transverse_nondegeneracy(F)["result"]
+        True
+    """
+    newton, ambient_dim = _validate_nondegeneracy_input(
+        laurent_poly, verbose)
+    weak_output, faces_by_dimension, face_data_cache = \
+        _weak_nondegeneracy_data(
+            laurent_poly, newton, ambient_dim, verbose,
+            require_transversality=True)
+
+    failures = list(weak_output["failures"])
+    weak_ok = weak_output["smooth_result"]
+    transverse_ok = weak_output["transverse_result"]
+    unimodular_ok = True
+    nested_ok = True
+    # Smoothness and transversality on the same components
+    for face_dim in range(2, ambient_dim):
+        faces = faces_by_dimension[face_dim]
+        for face_number in range(len(faces)):
+            data = face_data_cache[(face_dim, face_number)]
+            face_polyhedron = data["polyhedron"]
+            factors = data["factors"]
+
+            for subface_dim in range(1, face_dim):
+                subfaces = face_polyhedron.faces(subface_dim)
+                for subface_number in range(len(subfaces)):
+                    subface = subfaces[subface_number]
+                    cone_data = _relative_normal_cone_data(
+                        face_polyhedron, subface)
+
+                    if not cone_data["unimodular"]:
+                        unimodular_ok = False
+                        failure = {
+                            "type": "relative unimodularity",
+                            "face_dimension": face_dim,
+                            "face_number": face_number,
+                            "face_vertices": list(
+                                face_polyhedron.vertices()),
+                            "subface_dimension": subface_dim,
+                            "subface_number": subface_number,
+                            "subface_vertices": list(subface.vertices()),
+                            "rays": cone_data["rays"],
+                            "simplicial": cone_data["simplicial"],
+                            "lattice_index": cone_data["lattice_index"],
+                        }
+                        failures.append(failure)
+                        if verbose:
+                            print(failure)
+                        continue
+
+                    normal_dim = cone_data["dimension"]
+                    normal_matrix = _unimodular_normal_matrix(
+                        cone_data["rays"], face_dim)
+                    name_list = (
+                        ['z_' + str(i) for i in range(normal_dim)] +
+                        ['y_' + str(i)
+                         for i in range(face_dim - normal_dim)])
+                    chart_ring = PolynomialRing(
+                        QQ, len(name_list), names=name_list)
+                    chart_factors = [_polynomial_in_normal_chart(
+                        g, normal_matrix, normal_dim, chart_ring)
+                        for g in factors]
+
+                    if len(chart_factors) == 0:
+                        continue
+
+                    good, reason, witness = \
+                        _component_collection_smooth_along_stratum(
+                            chart_factors, normal_dim,
+                            prime_chart_seeds=True,
+                            require_transversality=True)
+                    if good:
+                        continue
+
+                    is_crossing_failure = not reason.startswith(
+                        "singular irreducible component")
+                    if is_crossing_failure:
+                        transverse_ok = False
+                        failure_type = "crossing transversality"
+                    else:
+                        nested_ok = False
+                        failure_type = "nested substratum"
+
+                    failure = {
+                        "type": failure_type,
+                        "face_dimension": face_dim,
+                        "face_number": face_number,
+                        "face_vertices": list(
+                            face_polyhedron.vertices()),
+                        "subface_dimension": subface_dim,
+                        "subface_number": subface_number,
+                        "subface_vertices": list(subface.vertices()),
+                        "factor_subset": witness["factor_subset"],
+                        "normal_rays": cone_data["rays"],
+                        "chart_equations": chart_factors,
+                        "component_generators": witness[
+                            "component_generators"],
+                        "reason": reason,
+                    }
+                    failures.append(failure)
+                    if verbose:
+                        print(failure)
+
+    base_ok = weak_ok and unimodular_ok and nested_ok
+    return {
+        "result": base_ok and transverse_ok,
+        "nested_nondegenerate": base_ok,
+        "weak_nondegenerate": weak_ok,
+        "relative_unimodular": unimodular_ok,
+        "nested_substrata": nested_ok,
+        "crossing_transverse": transverse_ok,
+        "failures": failures,
+    }
+
+
+def is_transverse_nondegenerate(laurent_poly, verbose=False):
+    """
+    Returns whether a Laurent polynomial is transverse non-degenerate.
+
+    Arguments:
+        laurent_poly : A nonzero Laurent polynomial over QQ with
+            full-dimensional Newton polytope.
+        verbose : A boolean.
+
+    Returns:
+        A boolean.
+
+    Example:
+        sage: R.<x,y> = LaurentPolynomialRing(QQ)
+        sage: F = x + y + x^-1*y^-1
+        sage: is_transverse_nondegenerate(F)
+        True
+    """
+    return transverse_nondegeneracy(laurent_poly, verbose=verbose)["result"]

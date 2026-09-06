@@ -2,7 +2,7 @@
 
 Author: Mikhail Ovcharenko.
 
-Supplementary materials for ``On Arithmetic Mirror Symmetry for smooth Fano fourfolds''.
+Supplementary materials for ``On Arithmetic Mirror Symmetry for smooth Fano fourfolds'' (see [arXiv:2604.26592](https://arxiv.org/abs/2604.26592)).
 
 
 ## Structure
